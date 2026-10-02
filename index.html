@@ -191,6 +191,26 @@
             color: var(--brand); font-weight: 600; font-size: 13px; padding: 7px 0; border-radius: 4px; cursor: pointer;
         }
         .add-btn:hover { background: var(--brand); color: #fff; }
+        .btn-row { display: flex; gap: 6px; margin-top: auto; }
+        .btn-row .add-btn { flex: 1.5; margin-top: 0; width: auto; }
+        .details-btn {
+            flex: 1; border: 1px solid var(--line); background: #fff; color: var(--text-dark);
+            font-weight: 500; font-size: 13px; padding: 7px 0; border-radius: 4px; cursor: pointer;
+        }
+        .details-btn:hover { border-color: var(--brand); color: var(--brand); }
+        .product-img img, .product-name { cursor: pointer; }
+
+        /* product details popup */
+        #detailsModal .modal-content { border: 0; border-radius: 8px; overflow: hidden; }
+        #detailsModal .modal-img { width: 100%; border-radius: 6px; object-fit: cover; aspect-ratio: 1 / 1; background: #eee; }
+        #detailsModal .d-price { color: var(--brand); font-size: 1.6rem; font-weight: 700; }
+        #detailsModal .d-price small { color: var(--text-muted); font-size: 13px; font-weight: 400; }
+        #detailsModal .d-list { padding-left: 0; list-style: none; }
+        #detailsModal .d-list li { padding: 3px 0; font-size: 14px; }
+        #detailsModal .d-list i { color: var(--brand); margin-right: 8px; }
+        .d-qty { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 4px; }
+        .d-qty button { border: 0; background: #fafafa; width: 36px; height: 36px; cursor: pointer; font-size: 18px; }
+        .d-qty span { min-width: 44px; text-align: center; font-weight: 600; }
 
         /* ---------- ABOUT ---------- */
         .about-box { background: #fff; border-radius: 6px; padding: 30px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
@@ -402,6 +422,36 @@
         </div>
     </div>
 
+    <!-- Product details popup -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="close position-absolute" style="right:14px;top:8px;z-index:5;font-size:28px" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="modal-body p-4">
+                    <div class="row">
+                        <div class="col-md-5 mb-3 mb-md-0"><img id="d-img" class="modal-img" alt="Product"></div>
+                        <div class="col-md-7">
+                            <small class="text-muted" id="d-cat"></small>
+                            <h4 class="font-weight-bold mb-2" id="d-name"></h4>
+                            <div class="d-price mb-1" id="d-price"></div>
+                            <div class="mb-3" style="font-size:13px;color:var(--brand);font-weight:600" id="d-min"></div>
+                            <p class="text-muted" id="d-desc"></p>
+                            <ul class="d-list" id="d-list"></ul>
+                            <div class="d-flex align-items-center mt-3 flex-wrap">
+                                <div class="d-qty mr-3 mb-2">
+                                    <button onclick="changeDetailQty(-1)">-</button>
+                                    <span id="d-qty">1</span>
+                                    <button onclick="changeDetailQty(1)">+</button>
+                                </div>
+                                <button class="btn btn-brand mb-2 px-4" onclick="addFromDetails()"><i class="fas fa-cart-plus mr-1"></i> Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="toast-container"></div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -417,6 +467,11 @@
         const ORDER_LINK = "https://wa.me/8801XXXXXXXXX";   // <-- put your link here
         // true = cart list is added to the message (works for WhatsApp links like wa.me)
         const SEND_CART_IN_MESSAGE = true;
+
+        // 1b) MINIMUM ORDER QUANTITY
+        //     1    = customers can order even 1 piece (same for all products)
+        //     null = use each product's own "moq" number from the products list below
+        const MIN_QTY_FOR_ALL = 1;
 
         // 2) CONTACT INFO
         const CONTACT = {
@@ -459,27 +514,56 @@
         ];
 
         // 8) PRODUCTS  -> Image5 to Image17
-        //    price = per piece wholesale price, moq = minimum order quantity (pieces)
+        //    price = per piece price, moq = minimum order quantity (pieces)
+        //    description = short text shown in the Details popup
+        //    details = list of bullet points in the Details popup (size, color, material, etc.)
         const products = [
-            { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "IT",     price: 450,  moq: 10, image: 5  },
-            { id: 2,  name: "Power Bank 10000mAh",            category: "IT",     price: 780,  moq: 10, image: 6  },
-            { id: 3,  name: "USB Flash Drive 32GB",           category: "IT",     price: 320,  moq: 20, image: 7  },
-            { id: 4,  name: "Electric Rice Cooker 1.8L",      category: "Home",   price: 1450, moq: 5,  image: 8  },
-            { id: 5,  name: "Electric Kettle 1.8L",           category: "Home",   price: 890,  moq: 6,  image: 9  },
-            { id: 6,  name: "Blender 2 in 1",                 category: "Home",   price: 1850, moq: 4,  image: 10 },
-            { id: 7,  name: "Matte Lipstick Set",             category: "Beauty", price: 180,  moq: 24, image: 11 },
-            { id: 8,  name: "Face Wash 100ml",                category: "Beauty", price: 140,  moq: 24, image: 12 },
-            { id: 9,  name: "Women's Three Piece Set",        category: "Women",  price: 1250, moq: 6,  image: 13 },
-            { id: 10, name: "Women's Printed Kurti",          category: "Women",  price: 650,  moq: 10, image: 14 },
-            { id: 11, name: "Men's Cotton Polo Shirt",        category: "Men",    price: 380,  moq: 12, image: 15 },
-            { id: 12, name: "Men's Panjabi",                  category: "Men",    price: 850,  moq: 6,  image: 16 },
-            { id: 13, name: "Travel Backpack",                category: "Others", price: 520,  moq: 10, image: 17 }
+            { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "IT",     price: 450,  moq: 10, image: 5,
+              description: "Compact wireless earbuds with a charging case, good for daily calls and music.",
+              details: ["Bluetooth 5.0", "Charging case included", "Up to 20 hours with case", "Color: Black / White"]  },
+            { id: 2,  name: "Power Bank 10000mAh",            category: "IT",     price: 780,  moq: 10, image: 6,
+              description: "Slim power bank for phones and small gadgets.",
+              details: ["10000mAh capacity", "2 USB output ports", "LED battery indicator", "Color: Black"]  },
+            { id: 3,  name: "USB Flash Drive 32GB",           category: "IT",     price: 320,  moq: 20, image: 7,
+              description: "Portable USB flash drive for storing and sharing files.",
+              details: ["32GB storage", "USB 2.0 / 3.0", "Metal body", "Plug and play"]  },
+            { id: 4,  name: "Electric Rice Cooker 1.8L",      category: "Home",   price: 1450, moq: 5,  image: 8,
+              description: "Easy-to-use electric rice cooker for home and small families.",
+              details: ["1.8 litre capacity", "Non-stick inner pot", "Keep-warm function", "Steam tray included"]  },
+            { id: 5,  name: "Electric Kettle 1.8L",           category: "Home",   price: 890,  moq: 6,  image: 9,
+              description: "Fast-boiling electric kettle with auto switch-off.",
+              details: ["1.8 litre capacity", "Stainless steel body", "Auto power-off", "Cordless base"]  },
+            { id: 6,  name: "Blender 2 in 1",                 category: "Home",   price: 1850, moq: 4,  image: 10,
+              description: "2 in 1 blender for juice, smoothie and grinding.",
+              details: ["2 jars included", "Strong copper motor", "Stainless steel blades", "Anti-slip base"] },
+            { id: 7,  name: "Matte Lipstick Set",             category: "Beauty", price: 180,  moq: 24, image: 11,
+              description: "Matte lipstick set in popular shades.",
+              details: ["Long-lasting color", "Smooth matte finish", "Set of multiple shades", "Sold per set"] },
+            { id: 8,  name: "Face Wash 100ml",                category: "Beauty", price: 140,  moq: 24, image: 12,
+              description: "Daily face wash for fresh and clean skin.",
+              details: ["100ml bottle", "Suitable for daily use", "Gentle formula", "Pump bottle"] },
+            { id: 9,  name: "Women's Three Piece Set",        category: "Women",  price: 1250, moq: 6,  image: 13,
+              description: "Stylish three piece set for everyday and occasion wear.",
+              details: ["Includes kameez, salwar and orna", "Soft cotton fabric", "Sizes: M, L, XL", "Multiple colors available"] },
+            { id: 10, name: "Women's Printed Kurti",          category: "Women",  price: 650,  moq: 10, image: 14,
+              description: "Printed kurti with comfortable fit and fabric.",
+              details: ["Cotton fabric", "Sizes: M, L, XL", "Printed design", "Machine washable"] },
+            { id: 11, name: "Men's Cotton Polo Shirt",        category: "Men",    price: 380,  moq: 12, image: 15,
+              description: "Classic cotton polo shirt for men.",
+              details: ["100% cotton", "Sizes: M, L, XL, XXL", "Regular fit", "Colors: Navy, Black, White"] },
+            { id: 12, name: "Men's Panjabi",                  category: "Men",    price: 850,  moq: 6,  image: 16,
+              description: "Traditional panjabi for festivals and daily wear.",
+              details: ["Soft cotton blend fabric", "Sizes: M, L, XL, XXL", "Embroidered collar", "Multiple colors available"] },
+            { id: 13, name: "Travel Backpack",                category: "Others", price: 520,  moq: 10, image: 17,
+              description: "Spacious backpack for travel, college and office.",
+              details: ["Water-resistant fabric", "Padded shoulder straps", "Laptop compartment", "Multiple pockets"] }
         ];
 
         /* =====================================================================
            END OF EDIT SECTION  -  below is the store logic
            ===================================================================== */
 
+        const minQty = p => (MIN_QTY_FOR_ALL !== null ? MIN_QTY_FOR_ALL : p.moq);
         const imgPath = n => `${IMAGE_FOLDER}/Image${n}.${IMAGE_EXT}`;
         const imgFallback = n => `https://placehold.co/600x400/fff1ea/f85606?text=Image${n}`;
         const money = v => `${CURRENCY}${v.toLocaleString('en-US')}`;
@@ -541,15 +625,18 @@
                 <div class="col-6 col-md-4 col-lg-3 mb-3">
                     <div class="product-card">
                         <div class="product-img">
-                            <img src="${imgPath(p.image)}" alt="${p.name}"
+                            <img src="${imgPath(p.image)}" alt="${p.name}" onclick="openDetails(${p.id})"
                                  onerror="this.onerror=null;this.src='${imgFallback(p.image)}'">
-                            <span class="moq-tag">Min ${p.moq} pcs</span>
+                            <span class="moq-tag">${minQty(p) === 1 ? 'Order from 1 pc' : 'Min ' + minQty(p) + ' pcs'}</span>
                         </div>
                         <div class="product-body">
                             <span class="product-cat">${catLabel(p.category)}</span>
-                            <h6 class="product-name">${p.name}</h6>
+                            <h6 class="product-name" onclick="openDetails(${p.id})">${p.name}</h6>
                             <div class="product-price mb-2">${money(p.price)} <small>/ piece</small></div>
-                            <button class="add-btn" onclick="addToCart(${p.id})"><i class="fas fa-cart-plus mr-1"></i> Add to Cart</button>
+                            <div class="btn-row">
+                                <button class="details-btn" onclick="openDetails(${p.id})">Details</button>
+                                <button class="add-btn" onclick="addToCart(${p.id})"><i class="fas fa-cart-plus mr-1"></i> Add</button>
+                            </div>
                         </div>
                     </div>
                 </div>`).join('');
@@ -575,20 +662,53 @@
             document.getElementById('cart-overlay').classList.toggle('show');
         }
 
-        function addToCart(id) {
+        function addToCart(id, qty) {
             const p = products.find(x => x.id === id);
+            const q = qty || minQty(p);
             const item = cart.find(i => i.id === id);
-            if (item) { item.quantity += 1; }
-            else { cart.push({ ...p, quantity: p.moq }); }   // wholesale: start from minimum order qty
+            if (item) { item.quantity += (qty || 1); }
+            else { cart.push({ ...p, quantity: q }); }
             updateCartUI();
-            showToast(item ? `${p.name}: quantity updated` : `Added ${p.moq} pcs of ${p.name}`);
+            showToast(item ? `${p.name}: quantity updated` : `Added ${q} pc${q > 1 ? 's' : ''} of ${p.name}`);
+        }
+
+        // ---------- Product details popup ----------
+        let detailId = null, detailQty = 1;
+
+        function openDetails(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            detailId = id;
+            detailQty = minQty(p);
+            const img = document.getElementById('d-img');
+            img.onerror = function () { this.onerror = null; this.src = imgFallback(p.image); };
+            img.src = imgPath(p.image);
+            document.getElementById('d-cat').textContent = catLabel(p.category);
+            document.getElementById('d-name').textContent = p.name;
+            document.getElementById('d-price').innerHTML = `${money(p.price)} <small>/ piece</small>`;
+            document.getElementById('d-min').textContent = minQty(p) === 1 ? 'You can order from 1 piece' : `Minimum order: ${minQty(p)} pieces`;
+            document.getElementById('d-desc').textContent = p.description || '';
+            document.getElementById('d-list').innerHTML = (p.details || []).map(t => `<li><i class="fas fa-check-circle"></i>${t}</li>`).join('');
+            document.getElementById('d-qty').textContent = detailQty;
+            $('#detailsModal').modal('show');
+        }
+
+        function changeDetailQty(delta) {
+            const p = products.find(x => x.id === detailId);
+            detailQty = Math.max(minQty(p), detailQty + delta);
+            document.getElementById('d-qty').textContent = detailQty;
+        }
+
+        function addFromDetails() {
+            addToCart(detailId, detailQty);
+            $('#detailsModal').modal('hide');
         }
 
         function updateQuantity(id, delta) {
             const item = cart.find(i => i.id === id);
             if (!item) return;
             item.quantity += delta;
-            if (item.quantity < item.moq) cart = cart.filter(i => i.id !== id);  // below minimum = remove
+            if (item.quantity < minQty(item)) cart = cart.filter(i => i.id !== id);  // below minimum = remove
             updateCartUI();
         }
 
@@ -614,7 +734,7 @@
                                 <button class="qty-btn" onclick="updateQuantity(${i.id}, -1)">-</button>
                                 <span class="mx-2 small font-weight-bold">${i.quantity}</span>
                                 <button class="qty-btn" onclick="updateQuantity(${i.id}, 1)">+</button>
-                                <small class="text-muted ml-2">Min ${i.moq}</small>
+                                <small class="text-muted ml-2">Min ${minQty(i)}</small>
                             </div>
                         </div>
                         <button class="qty-btn border-0" onclick="removeItem(${i.id})" aria-label="Remove"><i class="fas fa-trash-alt text-muted"></i></button>

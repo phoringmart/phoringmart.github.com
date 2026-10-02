@@ -186,6 +186,12 @@
         .product-name { font-size: 14px; font-weight: 500; margin: 2px 0 6px; min-height: 40px; }
         .product-price { color: var(--brand); font-weight: 700; font-size: 1.2rem; }
         .product-price small { color: var(--text-muted); font-weight: 400; font-size: 11px; }
+        .old-price { color: #9e9e9e; font-size: 13px; font-weight: 400; text-decoration: line-through; margin: 0 4px; }
+        .off-tag {
+            position: absolute; right: 0; top: 10px; background: #ffe3d6; color: var(--brand);
+            font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 12px 0 0 12px;
+        }
+        .save-note { font-size: 13px; color: #2e9b4e; font-weight: 600; }
         .add-btn {
             margin-top: auto; width: 100%; border: 1px solid var(--brand); background: #fff;
             color: var(--brand); font-weight: 600; font-size: 13px; padding: 7px 0; border-radius: 4px; cursor: pointer;
@@ -259,6 +265,7 @@
         #detailsModal .modal-content { border: 0; border-radius: 8px; overflow: hidden; }
         #detailsModal .modal-img { width: 100%; border-radius: 6px; object-fit: cover; aspect-ratio: 1 / 1; background: #eee; }
         #detailsModal .d-price { color: var(--brand); font-size: 1.6rem; font-weight: 700; }
+        #detailsModal .d-price .old-price { font-size: 16px; }
         #detailsModal .d-price small { color: var(--text-muted); font-size: 13px; font-weight: 400; }
         #detailsModal .d-list { padding-left: 0; list-style: none; }
         #detailsModal .d-list li { padding: 3px 0; font-size: 14px; }
@@ -643,7 +650,7 @@
 
         // 2) CONTACT INFO
         const CONTACT = {
-            address: "Jhalokati, Bangladesh",
+            address: "Dhaka, Bangladesh",
             phone:   "+ 880 96114 52533",
             email:   "forringworlds@gmail.com"
         };
@@ -682,11 +689,15 @@
         ];
 
         // 8) PRODUCTS  -> Image5 to Image17
-        //    price = per piece price, moq = minimum order quantity (pieces)
+        //    price    = the price customer pays per piece (offer price if there is a discount)
+        //    oldPrice = OPTIONAL. Add it only when the product has a discount: it is the previous price.
+        //               The site shows oldPrice crossed out, the offer price, and the discount % automatically.
+        //               No discount? Just delete the oldPrice part from that product.
+        //    moq      = minimum order quantity (pieces)
         //    description = short text shown in the Details popup
         //    details = list of bullet points in the Details popup (size, color, material, etc.)
         const products = [
-            { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "IT",     price: 450,  moq: 10, image: 5,
+            { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "IT",     price: 450, oldPrice: 600,  moq: 10, image: 5,
               description: "Compact wireless earbuds with a charging case, good for daily calls and music.",
               details: ["Bluetooth 5.0", "Charging case included", "Up to 20 hours with case", "Color: Black / White"]  },
             { id: 2,  name: "Power Bank 10000mAh",            category: "IT",     price: 780,  moq: 10, image: 6,
@@ -695,7 +706,7 @@
             { id: 3,  name: "USB Flash Drive 32GB",           category: "IT",     price: 320,  moq: 20, image: 7,
               description: "Portable USB flash drive for storing and sharing files.",
               details: ["32GB storage", "USB 2.0 / 3.0", "Metal body", "Plug and play"]  },
-            { id: 4,  name: "Electric Rice Cooker 1.8L",      category: "Home",   price: 1450, moq: 5,  image: 8,
+            { id: 4,  name: "Electric Rice Cooker 1.8L",      category: "Home",   price: 1450, oldPrice: 1800, moq: 5,  image: 8,
               description: "Easy-to-use electric rice cooker for home and small families.",
               details: ["1.8 litre capacity", "Non-stick inner pot", "Keep-warm function", "Steam tray included"]  },
             { id: 5,  name: "Electric Kettle 1.8L",           category: "Home",   price: 890,  moq: 6,  image: 9,
@@ -710,7 +721,7 @@
             { id: 8,  name: "Face Wash 100ml",                category: "Beauty", price: 140,  moq: 24, image: 12,
               description: "Daily face wash for fresh and clean skin.",
               details: ["100ml bottle", "Suitable for daily use", "Gentle formula", "Pump bottle"] },
-            { id: 9,  name: "Women's Three Piece Set",        category: "Women",  price: 1250, moq: 6,  image: 13,
+            { id: 9,  name: "Women's Three Piece Set",        category: "Women",  price: 1250, oldPrice: 1500, moq: 6,  image: 13,
               description: "Stylish three piece set for everyday and occasion wear.",
               details: ["Includes kameez, salwar and orna", "Soft cotton fabric", "Sizes: M, L, XL", "Multiple colors available"] },
             { id: 10, name: "Women's Printed Kurti",          category: "Women",  price: 650,  moq: 10, image: 14,
@@ -732,6 +743,10 @@
            ===================================================================== */
 
         const minQty = p => (MIN_QTY_FOR_ALL !== null ? MIN_QTY_FOR_ALL : p.moq);
+        const discountPct = p => (p.oldPrice && p.oldPrice > p.price) ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+        const priceHTML = p => discountPct(p)
+            ? `${money(p.price)} <span class="old-price">${money(p.oldPrice)}</span>`
+            : `${money(p.price)}`;
         const imgPath = n => `${IMAGE_FOLDER}/Image${n}.${IMAGE_EXT}`;
         const imgFallback = n => `https://placehold.co/600x400/fff1ea/f85606?text=Image${n}`;
         const money = v => `${CURRENCY}${v.toLocaleString('en-US')}`;
@@ -800,12 +815,13 @@
                         <div class="product-img">
                             <img src="${imgPath(p.image)}" alt="${p.name}" onclick="openDetails(${p.id})"
                                  onerror="this.onerror=null;this.src='${imgFallback(p.image)}'">
+                            ${discountPct(p) ? `<span class="off-tag">-${discountPct(p)}%</span>` : ''}
                             <span class="moq-tag">${minQty(p) === 1 ? 'Order from 1 pc' : 'Min ' + minQty(p) + ' pcs'}</span>
                         </div>
                         <div class="product-body">
                             <span class="product-cat">${catLabel(p.category)}</span>
                             <h6 class="product-name" onclick="openDetails(${p.id})">${p.name}</h6>
-                            <div class="product-price mb-2">${money(p.price)} <small>/ piece</small></div>
+                            <div class="product-price mb-2">${priceHTML(p)} <small>/ piece</small></div>
                             <div class="btn-row">
                                 <button class="details-btn" onclick="openDetails(${p.id})">Details</button>
                                 <button class="add-btn" onclick="addToCart(${p.id})"><i class="fas fa-cart-plus mr-1"></i> Add</button>
@@ -858,7 +874,8 @@
             img.src = imgPath(p.image);
             document.getElementById('d-cat').textContent = catLabel(p.category);
             document.getElementById('d-name').textContent = p.name;
-            document.getElementById('d-price').innerHTML = `${money(p.price)} <small>/ piece</small>`;
+            document.getElementById('d-price').innerHTML = `${priceHTML(p)} <small>/ piece</small>` +
+                (discountPct(p) ? `<div class="save-note">${discountPct(p)}% off - you save ${money(p.oldPrice - p.price)} per piece</div>` : '');
             document.getElementById('d-min').textContent = minQty(p) === 1 ? 'You can order from 1 piece' : `Minimum order: ${minQty(p)} pieces`;
             document.getElementById('d-desc').textContent = p.description || '';
             document.getElementById('d-list').innerHTML = (p.details || []).map(t => `<li><i class="fas fa-check-circle"></i>${t}</li>`).join('');

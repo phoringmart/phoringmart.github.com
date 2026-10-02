@@ -200,6 +200,53 @@
         .details-btn:hover { border-color: var(--brand); color: var(--brand); }
         .product-img img, .product-name { cursor: pointer; }
 
+        /* floating WhatsApp button (moving) */
+        .wa-float {
+            position: fixed; left: 18px; bottom: 18px; z-index: 1200;
+            width: 60px; height: 60px; border-radius: 50%;
+            background: #25d366; color: #fff; font-size: 34px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,.3);
+            animation: waBounce 3.2s ease-in-out infinite;
+        }
+        .wa-float:hover { color: #fff; background: #1ebe5a; animation-play-state: paused; }
+        .wa-float i { animation: waWiggle 3.2s ease-in-out infinite; }
+        .wa-float::before, .wa-float::after {
+            content: ""; position: absolute; inset: 0; border-radius: 50%;
+            border: 2px solid #25d366; opacity: 0; z-index: -1;
+            animation: waPulse 2.4s ease-out infinite;
+        }
+        .wa-float::after { animation-delay: 1.2s; }
+        .wa-label {
+            position: absolute; left: 72px; background: #fff; color: #212121;
+            font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 16px;
+            white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+            opacity: 0; transform: translateX(-6px); transition: all .2s ease; pointer-events: none;
+        }
+        .wa-float:hover .wa-label { opacity: 1; transform: none; }
+        @keyframes waBounce {
+            0%, 55%, 100% { transform: translateY(0); }
+            65% { transform: translateY(-14px); }
+            75% { transform: translateY(0); }
+            85% { transform: translateY(-6px); }
+            92% { transform: translateY(0); }
+        }
+        @keyframes waWiggle {
+            0%, 58%, 100% { transform: rotate(0); }
+            62% { transform: rotate(-16deg); }
+            68% { transform: rotate(16deg); }
+            74% { transform: rotate(-12deg); }
+            80% { transform: rotate(12deg); }
+            86% { transform: rotate(0); }
+        }
+        @keyframes waPulse {
+            0%   { transform: scale(1);   opacity: .7; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .wa-float, .wa-float i, .wa-float::before, .wa-float::after { animation: none; }
+        }
+
         /* checkout */
         .co-box { background: #fafafa; border: 1px solid var(--line); border-radius: 6px; padding: 14px; }
         .co-row { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; }
@@ -401,7 +448,7 @@
                     <div class="contact-card"><i class="fas fa-phone-alt"></i><h5>Phone</h5><p class="text-muted mb-0" id="c-phone"></p></div>
                 </div>
                 <div class="col-md-6 col-lg-3 mb-3">
-                    <div class="contact-card"><i class="fab fa-whatsapp" style="color:#25d366"></i><h5>WhatsApp</h5><p class="mb-0"><a id="c-whatsapp" href="#" target="_blank" rel="noopener" style="font-weight:600"></a></p></div>
+                    <div class="contact-card"><i class="fab fa-whatsapp" style="color:#25d366"></i><h5>WhatsApp</h5><p class="mb-0"><a id="c-whatsapp" href="#" target="_blank" rel="noopener" class="btn btn-sm" style="background:#25d366;color:#fff;font-weight:600">Chat on WhatsApp</a></p></div>
                 </div>
                 <div class="col-md-6 col-lg-3 mb-3">
                     <div class="contact-card"><i class="fas fa-envelope"></i><h5>Email</h5><p class="text-muted mb-0" id="c-email"></p></div>
@@ -545,10 +592,15 @@
                 <h4 class="font-weight-bold mt-3">Order received!</h4>
                 <p class="text-muted mb-1">Your order number is <b id="ok-id"></b></p>
                 <p class="text-muted">We will contact you shortly to confirm.</p>
+                <p id="ok-wa-note" class="small" style="display:none;background:#e9f9ef;border-radius:6px;padding:10px;color:#1b6b3a">
+                    Your order details are copied. In the WhatsApp chat, paste them (hold and tap Paste) and press Send so we get your order faster.
+                </p>
                 <button class="btn btn-brand" data-dismiss="modal">Continue shopping</button>
             </div>
         </div>
     </div>
+
+    <a id="wa-float" class="wa-float" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp"></i><span class="wa-label d-none d-md-block">Chat with us</span></a>
 
     <div id="toast-container"></div>
 
@@ -562,7 +614,7 @@
            ===================================================================== */
 
         // 1) WHATSAPP / MESSENGER LINK (used only if SEND_TO_WHATSAPP = true below)
-        const ORDER_LINK = "https://wa.me/8801727437653";   // <-- put your WhatsApp link here
+        const ORDER_LINK = "https://wa.me/message/LU72RIBVGGVSJ1";   // <-- your WhatsApp link
 
         // 1a) WHERE DO CUSTOMER ORDERS GO?  (you can turn both on)
         //     EMAIL    : the order form is sent to your email through Web3Forms (free).
@@ -593,7 +645,6 @@
         const CONTACT = {
             address: "Jhalokati, Bangladesh",
             phone:   "+ 880 96114 52533",
-            whatsapp: "+880 1727-437653",   // shown in Contact section (link uses ORDER_LINK above)
             email:   "forringworlds@gmail.com"
         };
 
@@ -695,9 +746,11 @@
         document.getElementById('c-address').textContent = CONTACT.address;
         document.getElementById('c-phone').textContent = CONTACT.phone;
         document.getElementById('c-email').textContent = CONTACT.email;
-        const waLink = document.getElementById('c-whatsapp');
-        waLink.textContent = CONTACT.whatsapp;
-        waLink.href = ORDER_LINK;
+        // WhatsApp links. Short links (wa.me/message/...) cannot carry a pre-written text, so text is added only for normal wa.me/NUMBER links.
+        const isShortWaLink = ORDER_LINK.includes('/message/');
+        const waUrl = text => isShortWaLink ? ORDER_LINK : ORDER_LINK + (ORDER_LINK.includes('?') ? '&' : '?') + 'text=' + encodeURIComponent(text);
+        document.getElementById('c-whatsapp').href = waUrl('Hello Phoring Mart');
+        document.getElementById('wa-float').href = waUrl('Hello Phoring Mart, I want to know about wholesale products.');
 
         const aboutImg = document.getElementById('about-img');
         aboutImg.src = imgPath(ABOUT_IMAGE);
@@ -960,7 +1013,11 @@ Payment: ${payText}`;
 
             // WhatsApp first (must open straight after the click so the browser allows it)
             if (SEND_TO_WHATSAPP) {
-                window.open(ORDER_LINK + (ORDER_LINK.includes('?') ? '&' : '?') + 'text=' + encodeURIComponent(message), '_blank');
+                if (isShortWaLink && navigator.clipboard) {
+                    // short link cannot hold text, so copy the order details for the customer to paste in the chat
+                    navigator.clipboard.writeText(message).catch(() => {});
+                }
+                window.open(waUrl(message), '_blank');
                 delivered = true;
             }
 
@@ -999,6 +1056,7 @@ Payment: ${payText}`;
             f.reset();
             $('#checkoutModal').modal('hide');
             document.getElementById('ok-id').textContent = orderId;
+            document.getElementById('ok-wa-note').style.display = (SEND_TO_WHATSAPP && isShortWaLink) ? 'block' : 'none';
             $('#successModal').modal('show');
         }
 

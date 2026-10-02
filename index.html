@@ -61,6 +61,7 @@
         }
         .brand-logo:hover { color: #fff; }
         .brand-logo i { margin-right: 6px; }
+        .brand-logo-img { height: 40px; width: auto; margin-right: 8px; vertical-align: middle; background: #fff; border-radius: 6px; padding: 2px; }
 
         .search-box { display: flex; background: #fff; border-radius: 4px; overflow: hidden; }
         .search-box input {
@@ -350,7 +351,7 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-6 col-md-3">
-                        <a href="#home-section" class="brand-logo"><i class="fas fa-store"></i>Phoring Mart</a>
+                        <a href="#home-section" class="brand-logo"><img id="header-logo" alt="Phoring Mart" class="brand-logo-img" onerror="this.style.display='none'">Phoring Mart</a>
                     </div>
                     <div class="col-6 col-md-3 order-md-3 text-right">
                         <button class="cart-btn" onclick="toggleCart()" aria-label="Open cart">
@@ -657,10 +658,36 @@
 
         // 3) CURRENCY & IMAGE SETTINGS
         const CURRENCY = "৳";
-        const IMAGE_FOLDER = "images";   // folder next to this html file
-        const IMAGE_EXT = "jpg";         // jpg / png / webp  (all images must use the same extension)
 
-        // 4) MARQUEE TEXT (scrolling line under the header)
+        // IMAGES: put ALL your pictures inside the "images" folder (next to this index.html file).
+        // Then, anywhere below, just write the picture's FILE NAME exactly as it is in the folder,
+        // for example:  "logo.png"   "Image5.jpg"   "my-product.webp"
+        //   - The extension (.png / .jpg / .webp) can be different for every picture.
+        //   - Capital / small letters must match exactly: "Logo.png" and "logo.png" are NOT the same.
+        //   - Avoid spaces in file names. Use "red-shirt.jpg" instead of "red shirt.jpg".
+        const IMAGE_FOLDER = "images";   // folder name. Change only if you rename the folder.
+
+
+
+        //===============================Company_Image==========================================
+
+        // LOGO (shown at the top-left of the website, and in the About section)
+        const LOGO_FILE = "logo.png";    // <-- file name of your logo inside the images folder
+
+
+        //=======================================================================================
+
+
+
+
+
+
+
+
+
+
+
+        //============================================ 4) MARQUEE TEXT (scrolling line under the header)============================================
         const MARQUEE_TEXTS = [
             "Welcome to Phoring Mart - Your trusted wholesale partner",
             "IT Products, Home Appliances, Beauty & Cosmetics, Women's and Men's Clothing",
@@ -668,15 +695,41 @@
             "Order now and get fast delivery all over Bangladesh"
         ];
 
-        // 5) COVER SLIDES (auto slide)  -> Image1, Image2, Image3
+        //============================================ 4) MARQUEE TEXT (scrolling line under the header)============================================
+
+
+        // 5) COVER SLIDES (the big pictures that slide automatically at the top)
+        //    image = file name from the images folder
+        //    title = big heading,  text = small line under it,  link = where the button goes
+        //    To ADD a slide: copy one full line { ... }, paste it below, and put a comma after the previous line.
+        //    To REMOVE a slide: delete its line (the LAST line must not have a comma at the end).
+
+
+
+
+
+
+
+
+
+        // ==============================Slider Image=======================================================
         const HERO_SLIDES = [
-            { image: 1, title: "Phoring Mart Wholesale Sale",   text: "Best prices on bulk orders",             link: "#shop-section" },
-            { image: 2, title: "IT Products & Home Appliances", text: "Gadgets and appliances at wholesale rate", link: "#shop-section" },
-            { image: 3, title: "Fashion & Beauty Collection",   text: "Clothing and cosmetics for resellers",    link: "#shop-section" }
+            { image: "Image1.jpg", title: "Phoring Mart Wholesale Sale",   text: "Best prices on bulk orders",              link: "#shop-section" },
+            { image: "Image2.jpg", title: "IT Products & Home Appliances", text: "Gadgets and appliances at wholesale rate", link: "#shop-section" },
+            { image: "Image3.jpg", title: "Fashion & Beauty Collection",   text: "Clothing and cosmetics for resellers",    link: "#shop-section" }
         ];
 
-       // 6) ABOUT SECTION IMAGE -> images/logo.png
-const ABOUT_IMAGE = "logo.png";
+
+    // ==============================Slider Image=======================================================
+
+
+
+
+
+
+        // 6) ABOUT SECTION IMAGE (the picture in the "About us" part)
+        //    Currently it uses your logo. To use another picture, write its file name, e.g. "Image4.jpg"
+        const ABOUT_IMAGE = LOGO_FILE;
 
         // 7) CATEGORIES (key must match "category" in products below)
         const CATEGORIES = [
@@ -688,67 +741,97 @@ const ABOUT_IMAGE = "logo.png";
             { key: "Others", label: "Others",             icon: "fa-box-open" }
         ];
 
-        // 8) PRODUCTS  -> Image5 to Image17
-        //    price    = the price customer pays per piece (offer price if there is a discount)
-        //    oldPrice = OPTIONAL. Add it only when the product has a discount: it is the previous price.
-        //               The site shows oldPrice crossed out, the offer price, and the discount % automatically.
-        //               No discount? Just delete the oldPrice part from that product.
-        //    moq      = minimum order quantity (pieces)
-        //    description = short text shown in the Details popup
-        //    details = list of bullet points in the Details popup (size, color, material, etc.)
+        // 8) PRODUCTS
+        // =====================================================================
+        //  HOW TO ADD A NEW PRODUCT
+        //  1. Put the product picture in the "images" folder (example: "new-shoe.jpg").
+        //  2. Copy the TEMPLATE below (from "{ id:" to the closing "}").
+        //  3. Paste it at the END of the list (just before the "];" line).
+        //  4. Put a comma "," after the closing "}" of the product above it.
+        //  5. Change the values (see the explanation of each field below).
+        //
+        //  TEMPLATE (copy this):
+        //  { id: 14,                                  // must be a UNIQUE number, never repeat
+        //    name: "Product Name",                    // product title shown on the website
+        //    category: "IT",                          // must be one of the keys in CATEGORIES above:
+        //                                             //   IT / Home / Beauty / Women / Men / Others
+        //    price: 500,                              // selling price (the OFFER price if there is a discount)
+        //    oldPrice: 700,                           // OPTIONAL: old price (crossed out). Delete this
+        //                                             //   whole line if there is NO offer/discount.
+        //    moq: 10,                                 // minimum order quantity (only used if MIN_QTY_FOR_ALL = null)
+        //    image: "new-shoe.jpg",                   // picture file name from the images folder
+        //    description: "Short text shown in the Details popup.",
+        //    details: ["Point 1", "Point 2", "Point 3"]   // bullet points: size, color, material...
+        //  }
+        //
+        //  HOW TO EDIT A PRODUCT: just change the value after the colon ":" for that product.
+        //  HOW TO DELETE A PRODUCT: delete its full { ... } block (and fix the commas).
+        //  OFFER EXAMPLE: price: 450, oldPrice: 600  -> website shows ৳450 with ৳600 crossed out and the discount %.
+        //  NO OFFER: write only price: 450 and remove the oldPrice part.
+        //  IMPORTANT: every product except the LAST one must end with a comma after "}".
+
+
+
+
+        // ===============================ADD PRODUCT AREA=================================================================
         const products = [
-            { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "IT",     price: 450, oldPrice: 600,  moq: 10, image: 5,
+            { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "IT",     price: 450, oldPrice: 600,  moq: 10, image: "Image5.jpg",
               description: "Compact wireless earbuds with a charging case, good for daily calls and music.",
               details: ["Bluetooth 5.0", "Charging case included", "Up to 20 hours with case", "Color: Black / White"]  },
-            { id: 2,  name: "Power Bank 10000mAh",            category: "IT",     price: 780,  moq: 10, image: 6,
+            { id: 2,  name: "Power Bank 10000mAh",            category: "IT",     price: 780,  moq: 10, image: "Image6.jpg",
               description: "Slim power bank for phones and small gadgets.",
               details: ["10000mAh capacity", "2 USB output ports", "LED battery indicator", "Color: Black"]  },
-            { id: 3,  name: "USB Flash Drive 32GB",           category: "IT",     price: 320,  moq: 20, image: 7,
+            { id: 3,  name: "USB Flash Drive 32GB",           category: "IT",     price: 320,  moq: 20, image: "Image7.jpg",
               description: "Portable USB flash drive for storing and sharing files.",
               details: ["32GB storage", "USB 2.0 / 3.0", "Metal body", "Plug and play"]  },
-            { id: 4,  name: "Electric Rice Cooker 1.8L",      category: "Home",   price: 1450, oldPrice: 1800, moq: 5,  image: 8,
+            { id: 4,  name: "Electric Rice Cooker 1.8L",      category: "Home",   price: 1450, oldPrice: 1800, moq: 5,  image: "Image8.jpg",
               description: "Easy-to-use electric rice cooker for home and small families.",
               details: ["1.8 litre capacity", "Non-stick inner pot", "Keep-warm function", "Steam tray included"]  },
-            { id: 5,  name: "Electric Kettle 1.8L",           category: "Home",   price: 890,  moq: 6,  image: 9,
+            { id: 5,  name: "Electric Kettle 1.8L",           category: "Home",   price: 890,  moq: 6,  image: "Image9.jpg",
               description: "Fast-boiling electric kettle with auto switch-off.",
               details: ["1.8 litre capacity", "Stainless steel body", "Auto power-off", "Cordless base"]  },
-            { id: 6,  name: "Blender 2 in 1",                 category: "Home",   price: 1850, moq: 4,  image: 10,
+            { id: 6,  name: "Blender 2 in 1",                 category: "Home",   price: 1850, moq: 4,  image: "Image10.jpg",
               description: "2 in 1 blender for juice, smoothie and grinding.",
               details: ["2 jars included", "Strong copper motor", "Stainless steel blades", "Anti-slip base"] },
-            { id: 7,  name: "Matte Lipstick Set",             category: "Beauty", price: 180,  moq: 24, image: 11,
+            { id: 7,  name: "Matte Lipstick Set",             category: "Beauty", price: 180,  moq: 24, image: "Image11.jpg",
               description: "Matte lipstick set in popular shades.",
               details: ["Long-lasting color", "Smooth matte finish", "Set of multiple shades", "Sold per set"] },
-            { id: 8,  name: "Face Wash 100ml",                category: "Beauty", price: 140,  moq: 24, image: 12,
+            { id: 8,  name: "Face Wash 100ml",                category: "Beauty", price: 140,  moq: 24, image: "Image12.jpg",
               description: "Daily face wash for fresh and clean skin.",
               details: ["100ml bottle", "Suitable for daily use", "Gentle formula", "Pump bottle"] },
-            { id: 9,  name: "Women's Three Piece Set",        category: "Women",  price: 1250, oldPrice: 1500, moq: 6,  image: 13,
+            { id: 9,  name: "Women's Three Piece Set",        category: "Women",  price: 1250, oldPrice: 1500, moq: 6,  image: "Image13.jpg",
               description: "Stylish three piece set for everyday and occasion wear.",
               details: ["Includes kameez, salwar and orna", "Soft cotton fabric", "Sizes: M, L, XL", "Multiple colors available"] },
-            { id: 10, name: "Women's Printed Kurti",          category: "Women",  price: 650,  moq: 10, image: 14,
+            { id: 10, name: "Women's Printed Kurti",          category: "Women",  price: 650,  moq: 10, image: "Image14.jpg",
               description: "Printed kurti with comfortable fit and fabric.",
               details: ["Cotton fabric", "Sizes: M, L, XL", "Printed design", "Machine washable"] },
-            { id: 11, name: "Men's Cotton Polo Shirt",        category: "Men",    price: 380,  moq: 12, image: 15,
+            { id: 11, name: "Men's Cotton Polo Shirt",        category: "Men",    price: 380,  moq: 12, image: "Image15.jpg",
               description: "Classic cotton polo shirt for men.",
               details: ["100% cotton", "Sizes: M, L, XL, XXL", "Regular fit", "Colors: Navy, Black, White"] },
-            { id: 12, name: "Men's Panjabi",                  category: "Men",    price: 850,  moq: 6,  image: 16,
+            { id: 12, name: "Men's Panjabi",                  category: "Men",    price: 850,  moq: 6,  image: "Image16.jpg",
               description: "Traditional panjabi for festivals and daily wear.",
               details: ["Soft cotton blend fabric", "Sizes: M, L, XL, XXL", "Embroidered collar", "Multiple colors available"] },
-            { id: 13, name: "Travel Backpack",                category: "Others", price: 520,  moq: 10, image: 17,
+            { id: 13, name: "Travel Backpack",                category: "Others", price: 520,  moq: 10, image: "Image17.jpg",
               description: "Spacious backpack for travel, college and office.",
               details: ["Water-resistant fabric", "Padded shoulder straps", "Laptop compartment", "Multiple pockets"] }
         ];
 
-        /* =====================================================================
+        /* =================================================================================================================================================
            END OF EDIT SECTION  -  below is the store logic
-           ===================================================================== */
+           ================================================================================================================================================= */
+
+
+
+
+
 
         const minQty = p => (MIN_QTY_FOR_ALL !== null ? MIN_QTY_FOR_ALL : p.moq);
         const discountPct = p => (p.oldPrice && p.oldPrice > p.price) ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
         const priceHTML = p => discountPct(p)
             ? `${money(p.price)} <span class="old-price">${money(p.oldPrice)}</span>`
             : `${money(p.price)}`;
-        const imgPath = n => `${IMAGE_FOLDER}/Image${n}.${IMAGE_EXT}`;
-        const imgFallback = n => `https://placehold.co/600x400/fff1ea/f85606?text=Image${n}`;
+        const imgPath = fileName => `${IMAGE_FOLDER}/${fileName}`;
+        const imgFallback = n => `https://placehold.co/600x400/fff1ea/f85606?text=${encodeURIComponent(String(n).replace(/\.[^.]+$/, ''))}`;
         const money = v => `${CURRENCY}${v.toLocaleString('en-US')}`;
         const catLabel = key => (CATEGORIES.find(c => c.key === key) || {}).label || key;
 
@@ -767,6 +850,7 @@ const ABOUT_IMAGE = "logo.png";
         document.getElementById('c-whatsapp').href = waUrl('Hello Phoring Mart');
         document.getElementById('wa-float').href = waUrl('Hello Phoring Mart, I want to know about wholesale products.');
 
+        document.getElementById('header-logo').src = imgPath(LOGO_FILE);
         const aboutImg = document.getElementById('about-img');
         aboutImg.src = imgPath(ABOUT_IMAGE);
         aboutImg.onerror = function () { this.onerror = null; this.src = imgFallback(ABOUT_IMAGE); };

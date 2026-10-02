@@ -394,13 +394,16 @@
                 <h2 class="section-title">Contact Phoring Mart</h2>
             </div>
             <div class="row">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 col-lg-3 mb-3">
                     <div class="contact-card"><i class="fas fa-map-marker-alt"></i><h5>Address</h5><p class="text-muted mb-0" id="c-address"></p></div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 col-lg-3 mb-3">
                     <div class="contact-card"><i class="fas fa-phone-alt"></i><h5>Phone</h5><p class="text-muted mb-0" id="c-phone"></p></div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="contact-card"><i class="fab fa-whatsapp" style="color:#25d366"></i><h5>WhatsApp</h5><p class="mb-0"><a id="c-whatsapp" href="#" target="_blank" rel="noopener" style="font-weight:600"></a></p></div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
                     <div class="contact-card"><i class="fas fa-envelope"></i><h5>Email</h5><p class="text-muted mb-0" id="c-email"></p></div>
                 </div>
             </div>
@@ -559,7 +562,7 @@
            ===================================================================== */
 
         // 1) WHATSAPP / MESSENGER LINK (used only if SEND_TO_WHATSAPP = true below)
-        const ORDER_LINK = "https://wa.me/8801XXXXXXXXX";   // <-- put your WhatsApp link here
+        const ORDER_LINK = "https://wa.me/8801727437653";   // <-- put your WhatsApp link here
 
         // 1a) WHERE DO CUSTOMER ORDERS GO?  (you can turn both on)
         //     EMAIL    : the order form is sent to your email through Web3Forms (free).
@@ -567,7 +570,7 @@
         const SEND_TO_EMAIL = true;
         const WEB3FORMS_KEY = "e14f5dc2-74ca-45b3-bc7d-198131ab4c4b";   // <-- paste your key here
         //     WHATSAPP : opens WhatsApp with the full order message after the customer submits
-        const SEND_TO_WHATSAPP = false;
+        const SEND_TO_WHATSAPP = true;
 
         // 1c) DELIVERY CHARGE OPTIONS (add or remove lines)
         const SHIPPING_OPTIONS = [
@@ -578,7 +581,7 @@
         // 1d) PAYMENT METHODS
         const COD_ENABLED = true;                  // Cash on delivery
         const BKASH_ENABLED = true;                // customer pays by bKash and enters the Transaction ID
-        const BKASH_NUMBER = "01XXXXXXXXX";        // <-- your bKash number
+        const BKASH_NUMBER = "01887535663";        // <-- your bKash number
         const BKASH_TYPE = "Send Money";           // "Send Money" or "Payment" (use what your bKash account accepts)
 
         // 1b) MINIMUM ORDER QUANTITY
@@ -590,6 +593,7 @@
         const CONTACT = {
             address: "Jhalokati, Bangladesh",
             phone:   "+ 880 96114 52533",
+            whatsapp: "+880 1727-437653",   // shown in Contact section (link uses ORDER_LINK above)
             email:   "forringworlds@gmail.com"
         };
 
@@ -691,6 +695,9 @@
         document.getElementById('c-address').textContent = CONTACT.address;
         document.getElementById('c-phone').textContent = CONTACT.phone;
         document.getElementById('c-email').textContent = CONTACT.email;
+        const waLink = document.getElementById('c-whatsapp');
+        waLink.textContent = CONTACT.whatsapp;
+        waLink.href = ORDER_LINK;
 
         const aboutImg = document.getElementById('about-img');
         aboutImg.src = imgPath(ABOUT_IMAGE);

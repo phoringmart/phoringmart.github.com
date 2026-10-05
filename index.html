@@ -343,7 +343,7 @@
     <header class="site-header">
         <div class="top-bar d-none d-md-block">
             <div class="container d-flex justify-content-between">
-                <span><i class="fas fa-truck"></i> Wholesale orders delivered all over Bangladesh</span>
+                <span><i class="fas fa-building"></i> A sister concern of <span class="parent-co"></span> &nbsp;|&nbsp; <i class="fas fa-truck"></i> Wholesale orders delivered all over Bangladesh</span>
                 <span><i class="fas fa-phone-alt"></i> <span id="top-phone"></span></span>
             </div>
         </div>
@@ -427,7 +427,7 @@
                     </div>
                     <div class="col-md-7 pl-md-4">
                         <h2 class="section-title mb-3">About Phoring Mart</h2>
-                        <p class="text-muted">Phoring Mart is a wholesale marketplace for retailers, shop owners and resellers. We supply IT products together with home appliances, beauty and cosmetics, women's clothing, men's clothing and many other everyday items, all at bulk prices.</p>
+                        <p class="text-muted"><b>Phoring Mart</b> is a sister concern of <b class="parent-co"></b>. We are a wholesale marketplace for retailers, shop owners and resellers. We supply IT products together with home appliances, beauty and cosmetics, women's clothing, men's clothing and many other everyday items, all at bulk prices.</p>
                         <ul class="about-list">
                             <li><i class="fas fa-check-circle"></i>IT products, gadgets and accessories</li>
                             <li><i class="fas fa-check-circle"></i>Home appliances and daily-use items</li>
@@ -467,7 +467,7 @@
 
     <footer>
         <div class="container text-center">
-            Copyright &copy; <span id="current-year"></span> Phoring Mart. All rights reserved.
+            Copyright &copy; <span id="current-year"></span> Phoring Mart, a sister concern of <span class="parent-co"></span>. All rights reserved.
         </div>
     </footer>
 
@@ -649,9 +649,12 @@
         //     null = use each product's own "moq" number from the products list below
         const MIN_QTY_FOR_ALL = 1;
 
+        // 1e) MOTHER COMPANY (shown in top bar, marquee, About section and footer)
+        const PARENT_COMPANY = "Mondal Group";
+
         // 2) CONTACT INFO
         const CONTACT = {
-            address: "Dhaka, Bangladesh",
+            address: "Barisal, Bangladesh",
             phone:   "+ 880 96114 52533",
             email:   "forringworlds@gmail.com"
         };
@@ -690,6 +693,7 @@
         //============================================ 4) MARQUEE TEXT (scrolling line under the header)============================================
         const MARQUEE_TEXTS = [
             "Welcome to Phoring Mart - Your trusted wholesale partner",
+            `Phoring Mart is a sister concern of ${PARENT_COMPANY}`,
             "IT Products, Home Appliances, Beauty & Cosmetics, Women's and Men's Clothing",
             "Special wholesale rates on bulk orders",
             "Order now and get fast delivery all over Bangladesh"
@@ -840,6 +844,7 @@
 
         // ---------- Static content ----------
         document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.querySelectorAll('.parent-co').forEach(el => el.textContent = PARENT_COMPANY);
         document.getElementById('top-phone').textContent = CONTACT.phone;
         document.getElementById('c-address').textContent = CONTACT.address;
         document.getElementById('c-phone').textContent = CONTACT.phone;

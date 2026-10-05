@@ -258,10 +258,26 @@
         .co-box { background: #fafafa; border: 1px solid var(--line); border-radius: 6px; padding: 14px; }
         .co-row { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; }
         .co-total { font-weight: 700; font-size: 1.1rem; color: var(--brand); border-top: 1px solid var(--line); margin-top: 6px; padding-top: 8px; }
+        /* checkout popup: body scrolls inside, Place Order bar stays visible (desktop + mobile) */
+        #checkoutModal .modal-content { display: flex; flex-direction: column; max-height: calc(100vh - 2rem); max-height: calc(100dvh - 2rem); overflow: hidden; }
+        #checkoutModal .modal-header { flex: 0 0 auto; }
+        #checkoutModal .co-form { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; margin: 0; }
+        #checkoutModal .co-form .modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+        #checkoutModal .co-form .modal-footer { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; background: #fff; box-shadow: 0 -3px 10px rgba(0,0,0,.08); }
+        #checkoutModal .co-foot-left { flex: 1 1 auto; min-width: 0; }
+        @media (max-width: 575.98px) {
+            #checkoutModal .modal-dialog { margin: 0; max-width: 100%; height: 100%; }
+            #checkoutModal .modal-content { height: 100%; max-height: 100%; border-radius: 0; }
+            #checkoutModal .co-form .modal-body { padding: 14px; }
+            #checkoutModal .co-form .modal-footer { padding: 10px 14px; }
+            #noticeModal .modal-dialog { margin: .5rem; }
+            #noticeModal .modal-footer .btn { flex: 1 1 100%; }
+        }
         .policy-note { background: #fff8e1; border: 1px solid #ffe08a; border-radius: 6px; padding: 10px 12px; font-size: 12.5px; color: #5d4600; line-height: 1.55; }
         .policy-note div { margin-top: 4px; }
         .notice-block { font-size: 15px; line-height: 1.7; }
         .notice-lang { display: inline-block; background: var(--brand-light); color: var(--brand); font-weight: 700; font-size: 12px; border-radius: 10px; padding: 1px 10px; margin-bottom: 4px; }
+        .bkash-badge { display: inline-block; background: #e2136e; color: #fff; font-weight: 700; font-size: 13px; border-radius: 4px; padding: 1px 9px; margin-right: 8px; }
         .bkash-box { background: #fff0f6; border: 1px solid #f4b6d0; border-radius: 6px; padding: 12px; font-size: 14px; }
         .bkash-box b { color: #e2136e; }
         #checkoutModal .form-control:focus { border-color: var(--brand); box-shadow: none; }
@@ -529,13 +545,13 @@
 
     <!-- Checkout popup -->
     <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background:var(--brand);color:#fff">
                     <h5 class="modal-title font-weight-bold">Checkout</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <form id="checkout-form" onsubmit="submitOrder(event)" novalidate>
+                <form id="checkout-form" class="co-form" onsubmit="submitOrder(event)" novalidate>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-7 mb-3">
@@ -585,24 +601,33 @@
                                     <div id="co-split" class="mt-2 pt-2" style="border-top:1px dashed var(--line)"></div>
                                 </div>
 
-                                <div class="policy-note mb-3">
-                                    <b>Note / দ্রষ্টব্য:</b>
-                                    <div>পণ্যের মূল্যে তারতম্য বা কোনো টেকনিক্যাল সমস্যা দেখা দিলে Phoring Mart কর্তৃপক্ষ অর্ডার বাতিল করার অধিকার রাখে।</div>
-                                    <div>If there is any price difference or technical problem, Phoring Mart authority reserves the right to cancel the order.</div>
-                                </div>
-
-                                <h6 class="font-weight-bold mb-2">Payment method</h6>
+                                <h6 class="font-weight-bold mb-2"><span class="bkash-badge">bKash</span>Payment method / পেমেন্ট পদ্ধতি</h6>
                                 <div id="co-pay-note" class="mb-2"></div>
                                 <div id="co-pay-options" class="mb-2"></div>
                                 <div id="bkash-box" class="bkash-box mb-2">
+                                    <div class="mb-2"><b>bKash Payment</b> (বিকাশ পেমেন্ট)</div>
+                                    <div class="mb-2">bKash Number: <b id="bkash-num-text"></b>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary py-0 ml-1" onclick="copyBkash()">Copy</button>
+                                    </div>
                                     <div id="bkash-text" class="mb-2"></div>
                                     <input type="tel" class="form-control form-control-sm mb-2" name="bkashnum" placeholder="Your bKash number (the one you paid from)">
                                     <input type="text" class="form-control form-control-sm" name="trxid" placeholder="bKash Transaction ID (TrxID)">
                                 </div>
-                                <div id="co-error" class="text-danger small mb-2"></div>
-                                <button type="submit" id="co-submit" class="btn btn-brand btn-block py-2">Place Order</button>
+                                <div class="policy-note mt-3">
+                                    <b>Note / দ্রষ্টব্য:</b>
+                                    <div>পণ্যের মূল্যে তারতম্য বা কোনো টেকনিক্যাল সমস্যা দেখা দিলে Phoring Mart কর্তৃপক্ষ অর্ডার বাতিল করার অধিকার রাখে।</div>
+                                    <div>If there is any price difference or technical problem, Phoring Mart authority reserves the right to cancel the order.</div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="co-foot-left">
+                            <div id="co-error" class="text-danger small"></div>
+                            <div class="small text-muted">Pay now by bKash / এখন bKash-এ দিন</div>
+                            <strong id="co-paynow-foot" style="color:#e2136e;font-size:1.25rem"></strong>
+                        </div>
+                        <button type="submit" id="co-submit" class="btn btn-brand px-4 py-2">Place Order</button>
                     </div>
                 </form>
             </div>
@@ -680,6 +705,7 @@
         //             - Other products = Cash on Delivery is allowed, but the DELIVERY CHARGE must be sent by bKash first.
         const COD_ENABLED = true;                  // false = turn Cash on Delivery off for everyone
         const NO_COD_CATEGORIES = ["IT"];          // category keys (from CATEGORIES) that cannot use Cash on Delivery
+        const FREE_DELIVERY_CATEGORIES = ["IT"];   // NO delivery charge if EVERY item in the cart is from these categories
         const BKASH_NUMBER = "01887535663";        // <-- your bKash number
         const BKASH_TYPE = "Send Money";           // "Send Money" or "Payment" (use what your bKash account accepts)
 
@@ -1063,12 +1089,21 @@
         }
 
         // ---------- Checkout ----------
-        const shippingBox = document.getElementById('co-shipping');
-        shippingBox.innerHTML = SHIPPING_OPTIONS.map((o, i) => `
-            <div class="co-row">
-                <label class="mb-0" style="cursor:pointer"><input type="radio" name="ship" value="${i}" ${i === 0 ? 'checked' : ''} onchange="renderCheckoutSummary()"> ${o.label}</label>
-                <span>${money(o.fee)}</span>
-            </div>`).join('');
+        const isFreeDelivery = () => cart.length > 0 && cart.every(i => FREE_DELIVERY_CATEGORIES.includes(i.category));
+
+        // delivery choices are built again each time checkout opens (IT-only cart = free delivery)
+        function renderShippingOptions() {
+            const box = document.getElementById('co-shipping');
+            if (isFreeDelivery()) {
+                box.innerHTML = `<div class="co-row"><span>Free delivery (ডেলিভারি চার্জ নেই)</span><span>${money(0)}</span></div>`;
+                return;
+            }
+            box.innerHTML = SHIPPING_OPTIONS.map((o, i) => `
+                <div class="co-row">
+                    <label class="mb-0" style="cursor:pointer"><input type="radio" name="ship" value="${i}" ${i === 0 ? 'checked' : ''} onchange="renderCheckoutSummary()"> ${o.label}</label>
+                    <span>${money(o.fee)}</span>
+                </div>`).join('');
+        }
 
         const cartHasNoCod = () => cart.some(i => NO_COD_CATEGORIES.includes(i.category));
 
@@ -1081,19 +1116,22 @@
                 title: 'Cash on Delivery (ক্যাশ অন ডেলিভারি)',
                 sub: 'Send the delivery charge first by bKash, pay the rest on delivery / আগে ডেলিভারি চার্জ bKash-এ পাঠান, বাকি টাকা ডেলিভারির সময় দিন'
             });
+            const free = isFreeDelivery();
             opts.push({
                 key: 'bkash',
-                title: 'Full payment by bKash (সম্পূর্ণ টাকা bKash-এ)',
-                sub: 'Pay products + delivery charge now / পণ্যের দাম ও ডেলিভারি চার্জ এখনই পরিশোধ করুন'
+                title: free ? 'Product price by bKash (পণ্যের মূল্য bKash-এ)' : 'Full payment by bKash (সম্পূর্ণ টাকা bKash-এ)',
+                sub: free ? 'No delivery charge. Pay only the product price now / ডেলিভারি চার্জ নেই, শুধু পণ্যের মূল্য এখনই পরিশোধ করুন'
+                          : 'Pay products + delivery charge now / পণ্যের দাম ও ডেলিভারি চার্জ এখনই পরিশোধ করুন'
             });
             document.getElementById('co-pay-options').innerHTML = opts.map((o, i) => `
                 <div class="mb-2"><label class="mb-0" style="cursor:pointer"><input type="radio" name="pay" value="${o.key}" ${i === 0 ? 'checked' : ''} onchange="renderCheckoutSummary()"> <b>${o.title}</b><br><small class="text-muted" style="margin-left:19px;display:inline-block">${o.sub}</small></label></div>`).join('');
-            document.getElementById('co-pay-note').innerHTML = noCod
-                ? '<div class="policy-note" style="background:#fdecea;border-color:#f5b5ae;color:#7a1f16">IT পণ্য থাকায় Cash on Delivery পাওয়া যাবে না। / Cash on Delivery is not available because your order has IT product(s).</div>'
-                : '';
+            document.getElementById('co-pay-note').innerHTML =
+                (noCod ? '<div class="policy-note mb-2" style="background:#fdecea;border-color:#f5b5ae;color:#7a1f16">IT পণ্য থাকায় Cash on Delivery পাওয়া যাবে না। / Cash on Delivery is not available because your order has IT product(s).</div>' : '') +
+                (free ? '<div class="policy-note mb-2" style="background:#e9f9ef;border-color:#b7e4c7;color:#1b6b3a">IT পণ্যের জন্য ডেলিভারি চার্জ লাগবে না। / No delivery charge for IT products.</div>' : '');
         }
 
         function selectedShipping() {
+            if (isFreeDelivery()) return { label: 'Free delivery', fee: 0 };
             const r = document.querySelector('input[name="ship"]:checked');
             return SHIPPING_OPTIONS[r ? +r.value : 0];
         }
@@ -1113,28 +1151,35 @@
                 <div class="co-row"><span>${i.name} x ${i.quantity}</span><span>${money(i.price * i.quantity)}</span></div>`).join('');
             document.getElementById('co-subtotal').textContent = money(sub);
             document.getElementById('co-total').textContent = money(total);
+            document.getElementById('co-paynow-foot').textContent = money(payNow);
             document.getElementById('co-split').innerHTML =
                 `<div class="co-row"><b>Pay now by bKash / এখন bKash-এ দিন</b><b style="color:#e2136e">${money(payNow)}</b></div>` +
                 (due > 0 ? `<div class="co-row"><span>Pay on delivery / ডেলিভারির সময় দিন</span><span>${money(due)}</span></div>` : '');
+            document.getElementById('bkash-num-text').textContent = BKASH_NUMBER;
             document.getElementById('bkash-text').innerHTML =
-                `Please <b>${BKASH_TYPE}</b> <b>${money(payNow)}</b> ${pay === 'cod' ? '(delivery charge)' : '(full amount)'} to bKash number <b>${BKASH_NUMBER}</b>, then enter your bKash number and Transaction ID below.<br>` +
-                `অনুগ্রহ করে bKash নম্বর <b>${BKASH_NUMBER}</b>-এ <b>${money(payNow)}</b> ${pay === 'cod' ? '(ডেলিভারি চার্জ)' : '(সম্পূর্ণ টাকা)'} <b>${BKASH_TYPE}</b> করুন, তারপর নিচে আপনার bKash নম্বর ও Transaction ID লিখুন।`;
+                `Please <b>${BKASH_TYPE}</b> <b>${money(payNow)}</b> (${pay === 'cod' ? 'delivery charge' : (ship.fee ? 'full amount' : 'product price')}) to bKash number <b>${BKASH_NUMBER}</b>, then enter your bKash number and Transaction ID below.<br>` +
+                `অনুগ্রহ করে bKash নম্বর <b>${BKASH_NUMBER}</b>-এ <b>${money(payNow)}</b> (${pay === 'cod' ? 'ডেলিভারি চার্জ' : (ship.fee ? 'সম্পূর্ণ টাকা' : 'পণ্যের মূল্য')}) <b>${BKASH_TYPE}</b> করুন, তারপর নিচে আপনার bKash নম্বর ও Transaction ID লিখুন।`;
+        }
+
+        function copyBkash() {
+            if (navigator.clipboard) navigator.clipboard.writeText(BKASH_NUMBER).catch(() => {});
+            showToast('bKash number copied / নম্বর কপি হয়েছে');
         }
 
         // Step 1: customer clicks "Order Now" -> show the Bangla + English notice popup
         function openCheckout() {
             if (cart.length === 0) { showToast("Your cart is empty!"); return; }
             toggleCart();
-            if (cartHasNoCod()) {
-                document.getElementById('notice-bn').innerHTML =
-                    'আপনার অর্ডারে <b>IT পণ্য</b> আছে। IT পণ্যের ক্ষেত্রে <b>Cash on Delivery (ক্যাশ অন ডেলিভারি) পাওয়া যাবে না</b>। অর্ডার নিশ্চিত করতে পণ্যের মূল্য ও ডেলিভারি চার্জসহ <b>সম্পূর্ণ টাকা আগে bKash-এ Send Money</b> করতে হবে।';
-                document.getElementById('notice-en').innerHTML =
-                    'Your order contains <b>IT product(s)</b>. <b>Cash on Delivery is not available</b> for IT products. To confirm your order, the <b>full amount (product price + delivery charge) must be sent in advance by bKash Send Money</b>.';
+            const bn = document.getElementById('notice-bn'), en = document.getElementById('notice-en');
+            if (isFreeDelivery() && cartHasNoCod()) {
+                bn.innerHTML = 'আপনার অর্ডারে শুধু <b>IT পণ্য</b> আছে। IT পণ্যের ক্ষেত্রে <b>Cash on Delivery পাওয়া যাবে না</b>, তবে <b>ডেলিভারি চার্জ লাগবে না</b>। অর্ডার নিশ্চিত করতে <b>শুধু পণ্যের মূল্য আগে bKash-এ Send Money</b> করতে হবে।';
+                en.innerHTML = 'Your order contains only <b>IT product(s)</b>. <b>Cash on Delivery is not available</b> for IT products, but <b>there is no delivery charge</b>. To confirm your order, send <b>only the product price in advance by bKash Send Money</b>.';
+            } else if (cartHasNoCod()) {
+                bn.innerHTML = 'আপনার অর্ডারে <b>IT পণ্যের সাথে অন্য পণ্যও</b> আছে। IT পণ্য থাকায় <b>Cash on Delivery পাওয়া যাবে না</b>। অর্ডার নিশ্চিত করতে পণ্যের মূল্য ও ডেলিভারি চার্জসহ <b>সম্পূর্ণ টাকা আগে bKash-এ Send Money</b> করতে হবে।';
+                en.innerHTML = 'Your order has <b>IT product(s) together with other products</b>. <b>Cash on Delivery is not available</b>. To confirm your order, the <b>full amount (product price + delivery charge) must be sent in advance by bKash Send Money</b>.';
             } else {
-                document.getElementById('notice-bn').innerHTML =
-                    'Cash on Delivery-তে অর্ডার করতে হলে <b>আগে ডেলিভারি চার্জ bKash-এ Send Money</b> করতে হবে। বাকি টাকা পণ্য হাতে পেয়ে পরিশোধ করবেন।';
-                document.getElementById('notice-en').innerHTML =
-                    'To order with Cash on Delivery, you must <b>first send the delivery charge by bKash Send Money</b>. You can pay the remaining amount when you receive the product.';
+                bn.innerHTML = 'Cash on Delivery-তে অর্ডার করতে হলে <b>আগে ডেলিভারি চার্জ bKash-এ Send Money</b> করতে হবে। বাকি টাকা পণ্য হাতে পেয়ে পরিশোধ করবেন।';
+                en.innerHTML = 'To order with Cash on Delivery, you must <b>first send the delivery charge by bKash Send Money</b>. You can pay the remaining amount when you receive the product.';
             }
             $('#noticeModal').modal('show');
         }
@@ -1142,8 +1187,10 @@
         // Step 2: customer accepts the notice -> open the checkout form
         function confirmNotice() {
             document.getElementById('co-error').textContent = '';
+            renderShippingOptions();
             renderPaymentOptions();
             renderCheckoutSummary();
+            document.querySelector('#checkoutModal .co-form .modal-body').scrollTop = 0;
             $('#noticeModal').one('hidden.bs.modal', () => $('#checkoutModal').modal('show')).modal('hide');
         }
 

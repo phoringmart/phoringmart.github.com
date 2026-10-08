@@ -376,12 +376,6 @@
         /* product details popup */
         #detailsModal .modal-content { border: 0; border-radius: 8px; overflow: hidden; }
         #detailsModal .modal-img { width: 100%; border-radius: 6px; object-fit: cover; aspect-ratio: 1 / 1; background: #eee; }
-        .d-thumbs { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-        .d-thumbs img {
-            width: 56px; height: 56px; object-fit: cover; border-radius: 6px; cursor: pointer;
-            border: 2px solid var(--line); opacity: .75;
-        }
-        .d-thumbs img.active { border-color: var(--brand); opacity: 1; }
         #detailsModal .d-price { color: var(--brand); font-size: 1.6rem; font-weight: 700; }
         #detailsModal .d-price .old-price { font-size: 16px; }
         #detailsModal .d-price small { color: var(--text-muted); font-size: 13px; font-weight: 400; }
@@ -624,10 +618,7 @@
                 <button type="button" class="close position-absolute" style="right:14px;top:8px;z-index:5;font-size:28px" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="modal-body p-4">
                     <div class="row">
-                        <div class="col-md-5 mb-3 mb-md-0">
-                            <img id="d-img" class="modal-img" alt="Product">
-                            <div id="d-thumbs" class="d-thumbs"></div>
-                        </div>
+                        <div class="col-md-5 mb-3 mb-md-0"><img id="d-img" class="modal-img" alt="Product"></div>
                         <div class="col-md-7">
                             <small class="text-muted" id="d-cat"></small>
                             <h4 class="font-weight-bold mb-2" id="d-name"></h4>
@@ -949,20 +940,10 @@
         //    oldPrice: 700,                           // OPTIONAL: old price (crossed out). Delete this
         //                                             //   whole line if there is NO offer/discount.
         //    moq: 10,                                 // minimum order quantity (only used if MIN_QTY_FOR_ALL = null)
-        //    image: "new-shoe.jpg",                   // MAIN picture shown on the product card.
-        //                                             //   Either a file name from the "images" folder (e.g. "new-shoe.jpg")
-        //                                             //   OR a full image link (e.g. "https://i.ibb.co/xxxx/shoe.jpg") - both work.
-        //    images: ["new-shoe-2.jpg", "https://i.ibb.co/xxxx/shoe-side.jpg"],
-        //                                             // OPTIONAL: extra pictures shown as a gallery in the Details popup
-        //                                             //   (same rule: folder file name OR full link). Delete this whole
-        //                                             //   line if the product only has one picture.
+        //    image: "new-shoe.jpg",                   // picture file name from the images folder
         //    description: "Short text shown in the Details popup.",
         //    details: ["Point 1", "Point 2", "Point 3"]   // bullet points: size, color, material...
         //  }
-        //
-        //  TIP - IMAGE LINKS: if you don't want to upload pictures into the "images" folder, upload them to a free
-        //  image host like https://imgbb.com (no account needed), then copy the "Direct link" it gives you
-        //  (it must end in .jpg/.png/.webp and start with https://) and paste that as the image / images value.
         //
         //  HOW TO EDIT A PRODUCT: just change the value after the colon ":" for that product.
         //  HOW TO DELETE A PRODUCT: delete its full { ... } block (and fix the commas).
@@ -976,11 +957,9 @@
         // ===============================ADD PRODUCT AREA=================================================================
         const products = [
             { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "IT",     price: 450, oldPrice: 600,  moq: 10, image: "Image5.jpg",
-              images: ["Image6.jpg", "Image7.jpg"],   // DEMO: extra gallery pictures from the images folder (delete this line if not needed)
               description: "Compact wireless earbuds with a charging case, good for daily calls and music.",
               details: ["Bluetooth 5.0", "Charging case included", "Up to 20 hours with case", "Color: Black / White"]  },
             { id: 2,  name: "Power Bank 10000mAh",            category: "IT",     price: 780,  moq: 10, image: "Image6.jpg",
-              images: ["https://placehold.co/600x400/fff1ea/f85606?text=Side+View"],   // DEMO: extra picture using a direct image LINK instead of the images folder
               description: "Slim power bank for phones and small gadgets.",
               details: ["10000mAh capacity", "2 USB output ports", "LED battery indicator", "Color: Black"]  },
             { id: 3,  name: "USB Flash Drive 32GB",           category: "IT",     price: 320,  moq: 20, image: "Image7.jpg",
@@ -1032,11 +1011,7 @@
         const priceHTML = p => discountPct(p)
             ? `${money(p.price)} <span class="old-price">${money(p.oldPrice)}</span>`
             : `${money(p.price)}`;
-        // Accepts either a file name from the "images" folder (e.g. "shoe1.jpg")
-        // OR a full image link starting with http:// or https:// (e.g. from imgbb, Google Drive, etc.)
-        const imgPath = fileName => /^https?:\/\//i.test(fileName) ? fileName : `${IMAGE_FOLDER}/${fileName}`;
-        // Returns ALL pictures of a product as a list: the main "image" plus any extra "images".
-        const productImages = p => [p.image, ...(p.images || [])].filter(Boolean);
+        const imgPath = fileName => `${IMAGE_FOLDER}/${fileName}`;
         const imgFallback = n => `https://placehold.co/600x400/fff1ea/f85606?text=${encodeURIComponent(String(n).replace(/\.[^.]+$/, ''))}`;
         const money = v => `${CURRENCY}${v.toLocaleString('en-US')}`;
         const catLabel = key => (CATEGORIES.find(c => c.key === key) || {}).label || key;
@@ -1262,14 +1237,9 @@
             if (!p) return;
             detailId = id;
             detailQty = minQty(p);
-            const pics = productImages(p);
             const img = document.getElementById('d-img');
             img.onerror = function () { this.onerror = null; this.src = imgFallback(p.image); };
-            img.src = imgPath(pics[0]);
-            const thumbs = document.getElementById('d-thumbs');
-            thumbs.innerHTML = pics.length > 1
-                ? pics.map((src, i) => `<img src="${imgPath(src)}" class="${i === 0 ? 'active' : ''}" onerror="this.onerror=null;this.src='${imgFallback(src)}'" onclick="selectDetailImage(${i})">`).join('')
-                : '';
+            img.src = imgPath(p.image);
             document.getElementById('d-cat').textContent = catLabel(p.category);
             document.getElementById('d-name').textContent = p.name;
             document.getElementById('d-price').innerHTML = `${priceHTML(p)} <small>/ piece</small>` +
@@ -1279,18 +1249,6 @@
             document.getElementById('d-list').innerHTML = (p.details || []).map(t => `<li><i class="fas fa-check-circle"></i>${t}</li>`).join('');
             document.getElementById('d-qty').textContent = detailQty;
             $('#detailsModal').modal('show');
-        }
-
-        function selectDetailImage(i) {
-            const p = products.find(x => x.id === detailId);
-            if (!p) return;
-            const pics = productImages(p);
-            const src = pics[i];
-            if (!src) return;
-            const img = document.getElementById('d-img');
-            img.onerror = function () { this.onerror = null; this.src = imgFallback(src); };
-            img.src = imgPath(src);
-            document.querySelectorAll('#d-thumbs img').forEach((el, idx) => el.classList.toggle('active', idx === i));
         }
 
         function changeDetailQty(delta) {
@@ -1640,4 +1598,12 @@ Payment: ${payText}`;
                 sc.onload = play;
                 document.head.appendChild(sc);
             });
-  
+        }
+
+        renderSaleBanners();
+        renderProducts(products);
+        updateCartUI();
+        $('#heroCarousel').carousel({ interval: 3500, ride: 'carousel', pause: false });
+    </script>
+</body>
+</html>

@@ -174,58 +174,6 @@
             border-radius: 10px; text-align: center;
         }
 
-        /* ---------- HEADER MENU: account + notifications ---------- */
-        .menu-bar-icons { display: flex; align-items: center; justify-content: flex-end; gap: 2px; }
-        .icon-btn {
-            position: relative; background: transparent; border: 0; color: #fff;
-            font-size: 20px; cursor: pointer; padding: 4px 8px;
-        }
-        .icon-btn .badge-dot {
-            position: absolute; top: -2px; right: 2px; width: 10px; height: 10px;
-            background: #ff2d55; border-radius: 50%; border: 2px solid var(--brand); display: none;
-        }
-        .icon-btn .badge-dot.show { display: block; }
-        .account-name-pill {
-            color: #fff; font-size: 13px; font-weight: 600; max-width: 110px; overflow: hidden;
-            text-overflow: ellipsis; white-space: nowrap; margin-right: 2px; display: none;
-        }
-        .dropdown-panel {
-            display: none; position: absolute; top: calc(100% + 8px); right: 0; z-index: 1200;
-            background: #fff; color: var(--text-dark); width: 320px; max-width: 92vw;
-            border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.2); overflow: hidden;
-        }
-        .dropdown-panel.show { display: block; }
-        .dropdown-panel .dp-head {
-            background: var(--brand); color: #fff; padding: 10px 14px; font-weight: 700; font-size: 14px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .dropdown-panel .dp-body { max-height: 360px; overflow-y: auto; }
-        .notif-item { padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; cursor: pointer; }
-        .notif-item:hover { background: var(--brand-light); }
-        .notif-item .ni-title { font-weight: 700; margin-bottom: 2px; }
-        .notif-item .ni-time { color: var(--text-muted); font-size: 11px; margin-top: 3px; }
-        .notif-item.unread { background: #fff8f3; border-left: 3px solid var(--brand); }
-        .dp-empty { padding: 26px 14px; text-align: center; color: var(--text-muted); font-size: 13px; }
-        .account-menu-list a {
-            display: flex; align-items: center; gap: 10px; padding: 11px 14px; font-size: 14px;
-            border-bottom: 1px solid var(--line); cursor: pointer;
-        }
-        .account-menu-list a:last-child { border-bottom: 0; }
-        .account-menu-list a:hover { background: var(--brand-light); color: var(--brand); }
-        .account-menu-list a i { width: 18px; color: var(--brand); }
-        .auth-tabs { display: flex; border-bottom: 1px solid var(--line); }
-        .auth-tabs button {
-            flex: 1; border: 0; background: #fff; padding: 10px; font-weight: 700; cursor: pointer; color: var(--text-muted);
-            border-bottom: 2px solid transparent;
-        }
-        .auth-tabs button.active { color: var(--brand); border-bottom-color: var(--brand); }
-        .order-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
-        .order-card .oc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 4px; }
-        .order-card .oc-id { font-weight: 800; color: var(--brand); }
-        .order-status { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: #fff1ea; color: var(--brand); text-transform: capitalize; }
-        .order-card .oc-item { font-size: 13px; color: var(--text-muted); display: flex; justify-content: space-between; padding: 2px 0; }
-        .order-card .oc-total { text-align: right; font-weight: 800; margin-top: 6px; border-top: 1px dashed var(--line); padding-top: 6px; }
-
         /* ---------- MARQUEE ---------- */
         .marquee-bar {
             background: #fff;
@@ -517,46 +465,9 @@
                         <a href="#home-section" class="brand-logo"><img id="header-logo" alt="Phoring Mart" class="brand-logo-img" onerror="this.style.display='none'">Phoring Mart</a>
                     </div>
                     <div class="col-6 col-md-3 order-md-3 text-right">
-                        <div class="menu-bar-icons" style="position:relative;display:inline-flex">
-                            <!-- Notifications -->
-                            <div style="position:relative">
-                                <button class="icon-btn" onclick="toggleNotifPanel()" aria-label="Notifications">
-                                    <i class="fas fa-bell"></i><span class="badge-dot" id="notif-dot"></span>
-                                </button>
-                                <div class="dropdown-panel" id="notif-panel">
-                                    <div class="dp-head"><span>Notifications</span><i class="fas fa-times" style="cursor:pointer" onclick="toggleNotifPanel(false)"></i></div>
-                                    <div class="dp-body" id="notif-list"><div class="dp-empty">No notifications yet.</div></div>
-                                </div>
-                            </div>
-                            <!-- Account -->
-                            <div style="position:relative;display:inline-flex;align-items:center">
-                                <span class="account-name-pill" id="account-name-pill"></span>
-                                <button class="icon-btn" onclick="toggleAccountPanel()" aria-label="Account">
-                                    <i class="fas fa-user-circle"></i>
-                                </button>
-                                <div class="dropdown-panel" id="account-panel">
-                                    <div id="account-panel-guest">
-                                        <div class="dp-head"><span>Welcome</span><i class="fas fa-times" style="cursor:pointer" onclick="toggleAccountPanel(false)"></i></div>
-                                        <div class="account-menu-list">
-                                            <a onclick="openAuthModal('login')"><i class="fas fa-sign-in-alt"></i> Login</a>
-                                            <a onclick="openAuthModal('signup')"><i class="fas fa-user-plus"></i> Create account</a>
-                                        </div>
-                                    </div>
-                                    <div id="account-panel-user" style="display:none">
-                                        <div class="dp-head"><span id="account-panel-name">My Account</span><i class="fas fa-times" style="cursor:pointer" onclick="toggleAccountPanel(false)"></i></div>
-                                        <div class="account-menu-list">
-                                            <a onclick="openProfileModal()"><i class="fas fa-id-card"></i> My Profile</a>
-                                            <a onclick="openOrdersModal()"><i class="fas fa-receipt"></i> Order History</a>
-                                            <a onclick="logOutUser()"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Cart -->
-                            <button class="cart-btn" onclick="toggleCart()" aria-label="Open cart">
-                                <i class="fas fa-shopping-cart"></i><span id="cart-badge">0</span>
-                            </button>
-                        </div>
+                        <button class="cart-btn" onclick="toggleCart()" aria-label="Open cart">
+                            <i class="fas fa-shopping-cart"></i><span id="cart-badge">0</span>
+                        </button>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 mt-2 mt-md-0">
                         <div class="search-wrap">
@@ -856,107 +767,6 @@
         </div>
     </div>
 
-    <!-- Login / Sign up modal -->
-    <div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="auth-tabs">
-                    <button type="button" id="tab-login" onclick="switchAuthTab('login')" class="active">Login</button>
-                    <button type="button" id="tab-signup" onclick="switchAuthTab('signup')">Create account</button>
-                </div>
-                <div class="modal-body">
-                    <div id="auth-fb-off" class="alert alert-warning small" style="display:none">
-                        Account features are not set up yet on this site. The site owner needs to add a Firebase config.
-                    </div>
-                    <div id="auth-error" class="text-danger small mb-2"></div>
-
-                    <form id="login-form" onsubmit="return handleLogin(event)">
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" class="form-control" name="password" required minlength="6">
-                        </div>
-                        <button type="submit" class="btn btn-brand btn-block" id="login-btn">Login</button>
-                        <div class="text-center mt-2"><a href="#" class="small" onclick="handleForgotPassword(event)">Forgot password?</a></div>
-                    </form>
-
-                    <form id="signup-form" style="display:none" onsubmit="return handleSignup(event)">
-                        <div class="form-group">
-                            <label>Full name</label>
-                            <input type="text" class="form-control" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Phone number</label>
-                            <input type="tel" class="form-control" name="phone" placeholder="01XXXXXXXXX" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" class="form-control" name="password" required minlength="6" placeholder="At least 6 characters">
-                        </div>
-                        <button type="submit" class="btn btn-brand btn-block" id="signup-btn">Create account</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- My Profile modal -->
-    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background:var(--brand);color:#fff">
-                    <h5 class="modal-title font-weight-bold">My Profile</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    <div id="profile-error" class="text-danger small mb-2"></div>
-                    <div id="profile-saved" class="text-success small mb-2" style="display:none">Profile updated.</div>
-                    <form id="profile-form" onsubmit="return handleProfileSave(event)">
-                        <div class="form-group">
-                            <label>Full name</label>
-                            <input type="text" class="form-control" name="name" id="pf-name">
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" id="pf-email" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Phone number</label>
-                            <input type="tel" class="form-control" name="phone" id="pf-phone" placeholder="01XXXXXXXXX">
-                        </div>
-                        <div class="form-group">
-                            <label>Default delivery address <small class="text-muted">(optional)</small></label>
-                            <textarea class="form-control" name="address" id="pf-address" rows="2"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-brand">Save changes</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Order History modal -->
-    <div class="modal fade" id="ordersModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="background:var(--brand);color:#fff">
-                    <h5 class="modal-title font-weight-bold">My Order History</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body" id="orders-list" style="max-height:70vh;overflow-y:auto">
-                    <div class="dp-empty">Loading...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <a id="wa-float" class="wa-float" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp"></i><span class="wa-label d-none d-md-block">Chat with us</span></a>
 
     <div id="toast-container"></div>
@@ -965,43 +775,10 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Firebase (Authentication + Firestore + Cloud Messaging) -->
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
-
     <script>
         /* =====================================================================
            EDIT SECTION  -  everything you normally change is in this block
            ===================================================================== */
-
-        // 0) FIREBASE  (user accounts, order history, notifications)
-        //    Create a free project at https://console.firebase.google.com
-        //    -> Project settings -> General -> "Your apps" -> Web app -> copy the config object below.
-        //    -> Build -> Authentication -> Sign-in method -> enable "Email/Password"
-        //    -> Build -> Firestore Database -> Create database
-        //    -> Project settings -> Cloud Messaging -> "Web Push certificates" -> Generate key pair -> paste as FCM_VAPID_KEY
-        const FIREBASE_CONFIG = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        const FCM_VAPID_KEY = "YOUR_VAPID_PUBLIC_KEY";   // <-- from Cloud Messaging > Web Push certificates
-        const FIREBASE_ENABLED = !String(FIREBASE_CONFIG.apiKey).startsWith("YOUR_");
-
-        let fbApp, auth, db, messaging, currentUser = null;
-        if (FIREBASE_ENABLED) {
-            fbApp = firebase.initializeApp(FIREBASE_CONFIG);
-            auth = firebase.auth();
-            db = firebase.firestore();
-            try { messaging = firebase.messaging(); } catch (e) { console.warn('Messaging not supported on this browser', e); }
-        } else {
-            console.warn('Firebase config not set yet - account / order-history / notification features are disabled until you paste your config into FIREBASE_CONFIG.');
-        }
 
         // 1) WHATSAPP / MESSENGER LINK (used only if SEND_TO_WHATSAPP = true below)
         const ORDER_LINK = "https://wa.me/message/LU72RIBVGGVSJ1";   // <-- your WhatsApp link
@@ -1140,9 +917,10 @@
         //                  or null = no end date.
         //     - lottie   : OPTIONAL link to a Lottie animation .json (from lottiefiles.com). Leave "" to use the built-in jumping animation.
         const CATEGORY_SALES = [
-            { category: "Men", percent: 80, active: true, endsOn: null, lottie: "" }
-            // { category: "Beauty", percent: 15, active: true, endsOn: "2026-11-15 23:59", lottie: "" },
-        ];
+    { category: "Men",    percent: 80, active: true, endsOn: null, lottie: "" },
+    { category: "Women",  percent: 25, active: true, endsOn: null, lottie: "" },
+    { category: "Beauty", percent: 15, active: true, endsOn: "2026-10-31 23:59", lottie: "" }
+];
 
         // 8) PRODUCTS
         // =====================================================================
@@ -1253,294 +1031,6 @@
             if (sale) { p.oldPrice = p.price; p.price = Math.round(p.price * (100 - sale.percent) / 100); }
         });
 
-        /* =====================================================================
-           ACCOUNT / ORDER HISTORY / NOTIFICATIONS  (Firebase)
-           ===================================================================== */
-        let notifications = [];
-        let unsubOrders = null, unsubNotifs = null;
-
-        function closeAllPanels(except) {
-            ['notif-panel', 'account-panel'].forEach(id => { if (id !== except) document.getElementById(id).classList.remove('show'); });
-        }
-        function toggleNotifPanel(force) {
-            const el = document.getElementById('notif-panel');
-            const show = force !== undefined ? force : !el.classList.contains('show');
-            closeAllPanels('notif-panel');
-            el.classList.toggle('show', show);
-            if (show) markNotificationsSeen();
-        }
-        function toggleAccountPanel(force) {
-            const el = document.getElementById('account-panel');
-            const show = force !== undefined ? force : !el.classList.contains('show');
-            closeAllPanels('account-panel');
-            el.classList.toggle('show', show);
-        }
-        document.addEventListener('click', e => {
-            if (!e.target.closest('.menu-bar-icons')) closeAllPanels();
-        });
-
-        function openAuthModal(tab) {
-            toggleAccountPanel(false);
-            if (!FIREBASE_ENABLED) { $('#authModal').modal('show'); document.getElementById('auth-fb-off').style.display = 'block'; return; }
-            document.getElementById('auth-fb-off').style.display = 'none';
-            document.getElementById('auth-error').textContent = '';
-            switchAuthTab(tab || 'login');
-            $('#authModal').modal('show');
-        }
-        function switchAuthTab(tab) {
-            const isLogin = tab === 'login';
-            document.getElementById('tab-login').classList.toggle('active', isLogin);
-            document.getElementById('tab-signup').classList.toggle('active', !isLogin);
-            document.getElementById('login-form').style.display = isLogin ? 'block' : 'none';
-            document.getElementById('signup-form').style.display = isLogin ? 'none' : 'block';
-            document.getElementById('auth-error').textContent = '';
-        }
-
-        function friendlyAuthError(code) {
-            const map = {
-                'auth/email-already-in-use': 'This email is already registered. Please login instead.',
-                'auth/invalid-email': 'Please enter a valid email address.',
-                'auth/weak-password': 'Password should be at least 6 characters.',
-                'auth/user-not-found': 'No account found with this email.',
-                'auth/wrong-password': 'Incorrect password.',
-                'auth/invalid-credential': 'Incorrect email or password.',
-                'auth/too-many-requests': 'Too many attempts. Please try again later.'
-            };
-            return map[code] || 'Something went wrong. Please try again.';
-        }
-
-        async function handleSignup(e) {
-            e.preventDefault();
-            if (!FIREBASE_ENABLED) return false;
-            const f = e.target, errBox = document.getElementById('auth-error');
-            const name = f.name.value.trim(), phone = f.phone.value.trim(), email = f.email.value.trim(), password = f.password.value;
-            errBox.textContent = '';
-            const btn = document.getElementById('signup-btn'); btn.disabled = true; btn.textContent = 'Creating account...';
-            try {
-                const cred = await auth.createUserWithEmailAndPassword(email, password);
-                await cred.user.updateProfile({ displayName: name });
-                await db.collection('users').doc(cred.user.uid).set({
-                    name, phone, email, address: '',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                $('#authModal').modal('hide');
-                showToast('Account created. Welcome, ' + name + '!');
-            } catch (ex) {
-                errBox.textContent = friendlyAuthError(ex.code);
-            }
-            btn.disabled = false; btn.textContent = 'Create account';
-            return false;
-        }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-            if (!FIREBASE_ENABLED) return false;
-            const f = e.target, errBox = document.getElementById('auth-error');
-            errBox.textContent = '';
-            const btn = document.getElementById('login-btn'); btn.disabled = true; btn.textContent = 'Logging in...';
-            try {
-                await auth.signInWithEmailAndPassword(f.email.value.trim(), f.password.value);
-                $('#authModal').modal('hide');
-                showToast('Logged in successfully.');
-            } catch (ex) {
-                errBox.textContent = friendlyAuthError(ex.code);
-            }
-            btn.disabled = false; btn.textContent = 'Login';
-            return false;
-        }
-
-        async function handleForgotPassword(e) {
-            e.preventDefault();
-            if (!FIREBASE_ENABLED) return;
-            const email = document.querySelector('#login-form [name=email]').value.trim();
-            const errBox = document.getElementById('auth-error');
-            if (!email) { errBox.textContent = 'Enter your email above first, then tap "Forgot password?" again.'; return; }
-            try {
-                await auth.sendPasswordResetEmail(email);
-                errBox.className = 'text-success small mb-2';
-                errBox.textContent = 'Password reset link sent to ' + email;
-            } catch (ex) {
-                errBox.className = 'text-danger small mb-2';
-                errBox.textContent = friendlyAuthError(ex.code);
-            }
-        }
-
-        function logOutUser() {
-            toggleAccountPanel(false);
-            if (!FIREBASE_ENABLED) return;
-            auth.signOut();
-        }
-
-        // ---------- Profile ----------
-        function openProfileModal() {
-            toggleAccountPanel(false);
-            if (!currentUser) return;
-            document.getElementById('profile-saved').style.display = 'none';
-            document.getElementById('profile-error').textContent = '';
-            document.getElementById('pf-email').value = currentUser.email || '';
-            db.collection('users').doc(currentUser.uid).get().then(doc => {
-                const d = doc.data() || {};
-                document.getElementById('pf-name').value = d.name || currentUser.displayName || '';
-                document.getElementById('pf-phone').value = d.phone || '';
-                document.getElementById('pf-address').value = d.address || '';
-            });
-            $('#profileModal').modal('show');
-        }
-
-        async function handleProfileSave(e) {
-            e.preventDefault();
-            if (!currentUser) return false;
-            const f = e.target;
-            const btn = f.querySelector('button[type=submit]');
-            btn.disabled = true; btn.textContent = 'Saving...';
-            try {
-                await db.collection('users').doc(currentUser.uid).set({
-                    name: f.name.value.trim(), phone: f.phone.value.trim(), address: f.address.value.trim(), email: currentUser.email
-                }, { merge: true });
-                if (f.name.value.trim() !== currentUser.displayName) await currentUser.updateProfile({ displayName: f.name.value.trim() });
-                document.getElementById('profile-saved').style.display = 'block';
-                document.getElementById('account-panel-name').textContent = f.name.value.trim() || 'My Account';
-                document.getElementById('account-name-pill').textContent = f.name.value.trim() || currentUser.email;
-            } catch (ex) {
-                document.getElementById('profile-error').textContent = 'Could not save. Please try again.';
-            }
-            btn.disabled = false; btn.textContent = 'Save changes';
-            return false;
-        }
-
-        // ---------- Order history ----------
-        function openOrdersModal() {
-            toggleAccountPanel(false);
-            $('#ordersModal').modal('show');
-        }
-
-        function renderOrders(docs) {
-            const box = document.getElementById('orders-list');
-            if (!docs.length) { box.innerHTML = '<div class="dp-empty">You have not placed any order yet.</div>'; return; }
-            box.innerHTML = docs.map(o => {
-                const date = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate().toLocaleString() : '';
-                const items = (o.items || []).map(i => `<div class="oc-item"><span>${i.name} x ${i.quantity}</span><span>${money(i.price * i.quantity)}</span></div>`).join('');
-                return `<div class="order-card">
-                    <div class="oc-head">
-                        <span class="oc-id">${o.orderId}</span>
-                        <span class="order-status">${o.status || 'pending'}</span>
-                    </div>
-                    <div class="small text-muted mb-2">${date}</div>
-                    ${items}
-                    <div class="oc-total">Total: ${money(o.total)}</div>
-                </div>`;
-            }).join('');
-        }
-
-        function listenOrders() {
-            if (unsubOrders) { unsubOrders(); unsubOrders = null; }
-            if (!currentUser) return;
-            unsubOrders = db.collection('orders').where('uid', '==', currentUser.uid)
-                .orderBy('createdAt', 'desc').limit(50)
-                .onSnapshot(snap => renderOrders(snap.docs.map(d => d.data())),
-                    err => { console.error(err); document.getElementById('orders-list').innerHTML = '<div class="dp-empty">Could not load orders.</div>'; });
-        }
-
-        async function saveOrderToFirestore(order) {
-            if (!FIREBASE_ENABLED || !currentUser) return;
-            try {
-                await db.collection('orders').add({
-                    ...order, uid: currentUser.uid, status: 'pending',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } catch (ex) { console.error('Could not save order to Firestore', ex); }
-        }
-
-        // ---------- In-app notifications ----------
-        function timeAgo(date) {
-            if (!date) return '';
-            const s = Math.floor((new Date() - date) / 1000);
-            if (s < 60) return 'just now';
-            if (s < 3600) return Math.floor(s / 60) + 'm ago';
-            if (s < 86400) return Math.floor(s / 3600) + 'h ago';
-            return Math.floor(s / 86400) + 'd ago';
-        }
-        function lastSeenNotifTime() { return parseInt(localStorage.getItem('pm_notif_seen') || '0', 10); }
-        function markNotificationsSeen() {
-            localStorage.setItem('pm_notif_seen', String(Date.now()));
-            document.getElementById('notif-dot').classList.remove('show');
-            document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
-        }
-        function renderNotifications() {
-            const box = document.getElementById('notif-list');
-            if (!notifications.length) { box.innerHTML = '<div class="dp-empty">No notifications yet.</div>'; return; }
-            const seen = lastSeenNotifTime();
-            box.innerHTML = notifications.map(n => {
-                const t = n.createdAt && n.createdAt.toDate ? n.createdAt.toDate() : null;
-                const unread = t && t.getTime() > seen;
-                return `<div class="notif-item ${unread ? 'unread' : ''}">
-                    <div class="ni-title">${n.title || 'Offer'}</div>
-                    <div>${n.body || ''}</div>
-                    <div class="ni-time">${timeAgo(t)}</div>
-                </div>`;
-            }).join('');
-            const hasUnread = notifications.some(n => n.createdAt && n.createdAt.toDate && n.createdAt.toDate().getTime() > seen);
-            document.getElementById('notif-dot').classList.toggle('show', hasUnread);
-        }
-        function listenNotifications() {
-            if (!FIREBASE_ENABLED) return;
-            unsubNotifs = db.collection('notifications').orderBy('createdAt', 'desc').limit(20)
-                .onSnapshot(snap => { notifications = snap.docs.map(d => d.data()); renderNotifications(); },
-                    err => console.error('notifications listener error', err));
-        }
-
-        // ---------- Push notifications (Firebase Cloud Messaging) ----------
-        async function setupPushNotifications() {
-            if (!FIREBASE_ENABLED || !messaging || !('serviceWorker' in navigator)) return;
-            try {
-                const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-                const permission = await Notification.requestPermission();
-                if (permission !== 'granted') return;
-                const token = await messaging.getToken({ vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: reg });
-                if (token && currentUser) {
-                    await db.collection('users').doc(currentUser.uid).collection('fcmTokens').doc(token).set({
-                        token, createdAt: firebase.firestore.FieldValue.serverTimestamp(), ua: navigator.userAgent
-                    });
-                }
-                messaging.onMessage(payload => {
-                    const n = payload.notification || {};
-                    showToast((n.title ? n.title + ': ' : '') + (n.body || 'New offer!'));
-                });
-            } catch (ex) {
-                console.warn('Push notification setup skipped:', ex.message);
-            }
-        }
-
-        // ---------- Auth state ----------
-        function updateAccountUI(user) {
-            const guest = document.getElementById('account-panel-guest');
-            const loggedIn = document.getElementById('account-panel-user');
-            const pill = document.getElementById('account-name-pill');
-            if (user) {
-                guest.style.display = 'none';
-                loggedIn.style.display = 'block';
-                const label = user.displayName || user.email;
-                document.getElementById('account-panel-name').textContent = label;
-                pill.textContent = label; pill.style.display = '';
-            } else {
-                guest.style.display = 'block';
-                loggedIn.style.display = 'none';
-                pill.style.display = 'none'; pill.textContent = '';
-            }
-        }
-
-        if (FIREBASE_ENABLED) {
-            auth.onAuthStateChanged(user => {
-                currentUser = user;
-                updateAccountUI(user);
-                if (user) {
-                    listenOrders();
-                    setupPushNotifications();
-                } else if (unsubOrders) { unsubOrders(); unsubOrders = null; }
-            });
-            listenNotifications();
-        }
-
         let cart = [];
         let currentCategory = 'all';
 
@@ -1650,4 +1140,470 @@
             renderProducts(list);
             const info = document.getElementById('search-info');
             if (activeQuery) {
-                info.innerHTML = `<span>Search results for <b></b> - ${list.length} product${list.length === 1 ? '' : 's'} found / <b>${list.length}</b> টি পণ্য পাওয়া গেছে</spa
+                info.innerHTML = `<span>Search results for <b></b> - ${list.length} product${list.length === 1 ? '' : 's'} found / <b>${list.length}</b> টি পণ্য পাওয়া গেছে</span>` +
+                                 `<button class="btn btn-sm btn-outline-secondary" onclick="clearSearch()">Clear / মুছুন</button>`;
+                info.querySelector('b').textContent = '"' + activeQuery + '"';
+                info.classList.add('show');
+            } else {
+                info.classList.remove('show');
+            }
+        }
+
+        // search button / Enter key: show the matching products from ALL categories in the product section
+        function doSearch() {
+            const q = document.getElementById('product-search').value.trim();
+            hideSuggestions();
+            if (!q) { clearSearch(); return; }
+            activeQuery = q;
+            currentCategory = 'all';
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
+            filterProducts();
+            document.getElementById('shop-section').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('product-search').blur();
+        }
+
+        function clearSearch() {
+            activeQuery = '';
+            document.getElementById('product-search').value = '';
+            hideSuggestions();
+            filterProducts();
+        }
+
+        // while typing: show matching products in a dropdown under the search box
+        let sgIndex = -1;
+        function hideSuggestions() { document.getElementById('search-suggest').classList.remove('show'); sgIndex = -1; }
+
+        function showSuggestions() {
+            const q = document.getElementById('product-search').value.trim();
+            const box = document.getElementById('search-suggest');
+            if (!q) { hideSuggestions(); return; }
+            const list = products.filter(p => matches(p, q));
+            sgIndex = -1;
+            if (list.length === 0) {
+                box.innerHTML = '<div class="sg-empty">No product found / কোনো পণ্য পাওয়া যায়নি</div>';
+            } else {
+                box.innerHTML = list.slice(0, 6).map(p => `
+                    <div class="sg-item" data-id="${p.id}" onclick="pickSuggestion(${p.id})">
+                        <img src="${imgPath(p.image)}" alt="" onerror="this.onerror=null;this.src='${imgFallback(p.image)}'">
+                        <div><div class="sg-name">${p.name}</div><div class="sg-meta">${catLabel(p.category)}</div></div>
+                        <div class="sg-price">${money(p.price)}</div>
+                    </div>`).join('') +
+                    `<div class="sg-all" onclick="doSearch()">See all ${list.length} result${list.length === 1 ? '' : 's'} / সব রেজাল্ট দেখুন</div>`;
+            }
+            box.classList.add('show');
+        }
+
+        function onSearchInput() {
+            if (!document.getElementById('product-search').value.trim() && activeQuery) { clearSearch(); return; }
+            showSuggestions();
+        }
+
+        function pickSuggestion(id) { hideSuggestions(); openDetails(id); }
+
+        function onSearchKey(e) {
+            const items = [...document.querySelectorAll('#search-suggest .sg-item')];
+            if (e.key === 'ArrowDown' && items.length) { e.preventDefault(); sgIndex = (sgIndex + 1) % items.length; }
+            else if (e.key === 'ArrowUp' && items.length) { e.preventDefault(); sgIndex = (sgIndex - 1 + items.length) % items.length; }
+            else if (e.key === 'Enter') { e.preventDefault(); if (sgIndex >= 0 && items[sgIndex]) pickSuggestion(+items[sgIndex].dataset.id); else doSearch(); return; }
+            else if (e.key === 'Escape') { hideSuggestions(); return; }
+            else return;
+            items.forEach((el, i) => el.classList.toggle('active', i === sgIndex));
+        }
+
+        // click anywhere outside the search box closes the dropdown
+        document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) hideSuggestions(); });
+
+        // ---------- Cart ----------
+        function toggleCart() {
+            document.getElementById('cart-drawer').classList.toggle('open');
+            document.getElementById('cart-overlay').classList.toggle('show');
+        }
+
+        function addToCart(id, qty) {
+            const p = products.find(x => x.id === id);
+            const q = qty || minQty(p);
+            const item = cart.find(i => i.id === id);
+            if (item) { item.quantity += (qty || 1); }
+            else { cart.push({ ...p, quantity: q }); }
+            updateCartUI();
+            showToast(item ? `${p.name}: quantity updated` : `Added ${q} pc${q > 1 ? 's' : ''} of ${p.name}`);
+        }
+
+        // ---------- Product details popup ----------
+        let detailId = null, detailQty = 1;
+
+        function openDetails(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            detailId = id;
+            detailQty = minQty(p);
+            const img = document.getElementById('d-img');
+            img.onerror = function () { this.onerror = null; this.src = imgFallback(p.image); };
+            img.src = imgPath(p.image);
+            document.getElementById('d-cat').textContent = catLabel(p.category);
+            document.getElementById('d-name').textContent = p.name;
+            document.getElementById('d-price').innerHTML = `${priceHTML(p)} <small>/ piece</small>` +
+                (discountPct(p) ? `<div class="save-note">${discountPct(p)}% off - you save ${money(p.oldPrice - p.price)} per piece</div>` : '');
+            document.getElementById('d-min').textContent = minQty(p) === 1 ? 'You can order from 1 piece' : `Minimum order: ${minQty(p)} pieces`;
+            document.getElementById('d-desc').textContent = p.description || '';
+            document.getElementById('d-list').innerHTML = (p.details || []).map(t => `<li><i class="fas fa-check-circle"></i>${t}</li>`).join('');
+            document.getElementById('d-qty').textContent = detailQty;
+            $('#detailsModal').modal('show');
+        }
+
+        function changeDetailQty(delta) {
+            const p = products.find(x => x.id === detailId);
+            detailQty = Math.max(minQty(p), detailQty + delta);
+            document.getElementById('d-qty').textContent = detailQty;
+        }
+
+        function addFromDetails() {
+            addToCart(detailId, detailQty);
+            $('#detailsModal').modal('hide');
+        }
+
+        function updateQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.quantity += delta;
+            if (item.quantity < minQty(item)) cart = cart.filter(i => i.id !== id);  // below minimum = remove
+            updateCartUI();
+        }
+
+        function removeItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+        }
+
+        function cartTotal() { return cart.reduce((s, i) => s + i.price * i.quantity, 0); }
+
+        function updateCartUI() {
+            const box = document.getElementById('cart-items-list');
+            if (cart.length === 0) {
+                box.innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-shopping-cart fa-3x mb-3"></i><p>Your cart is empty.</p></div>';
+            } else {
+                box.innerHTML = cart.map(i => `
+                    <div class="cart-item">
+                        <img src="${imgPath(i.image)}" alt="${i.name}" onerror="this.onerror=null;this.src='${imgFallback(i.image)}'">
+                        <div class="flex-grow-1">
+                            <div style="font-size:14px;font-weight:500">${i.name}</div>
+                            <div style="color:var(--brand);font-weight:600;font-size:13px">${money(i.price)} x ${i.quantity} = ${money(i.price * i.quantity)}</div>
+                            <div class="d-flex align-items-center mt-1">
+                                <button class="qty-btn" onclick="updateQuantity(${i.id}, -1)">-</button>
+                                <span class="mx-2 small font-weight-bold">${i.quantity}</span>
+                                <button class="qty-btn" onclick="updateQuantity(${i.id}, 1)">+</button>
+                                <small class="text-muted ml-2">Min ${minQty(i)}</small>
+                            </div>
+                        </div>
+                        <button class="qty-btn border-0" onclick="removeItem(${i.id})" aria-label="Remove"><i class="fas fa-trash-alt text-muted"></i></button>
+                    </div>`).join('');
+            }
+            document.getElementById('cart-badge').textContent = cart.reduce((s, i) => s + i.quantity, 0);
+            document.getElementById('cart-total-price').textContent = money(cartTotal());
+        }
+
+        // ---------- Checkout ----------
+        const isFreeDelivery = () => cart.length > 0 && cart.every(i => FREE_DELIVERY_CATEGORIES.includes(i.category));
+
+        // delivery choices are built again each time checkout opens (IT-only cart = free delivery)
+        function renderShippingOptions() {
+            const box = document.getElementById('co-shipping');
+            if (isFreeDelivery()) {
+                box.innerHTML = `<div class="co-row"><span>Free delivery (ডেলিভারি চার্জ নেই)</span><span>${money(0)}</span></div>`;
+                return;
+            }
+            box.innerHTML = SHIPPING_OPTIONS.map((o, i) => `
+                <div class="co-row">
+                    <label class="mb-0" style="cursor:pointer"><input type="radio" name="ship" value="${i}" ${i === 0 ? 'checked' : ''} onchange="renderCheckoutSummary()"> ${o.label}</label>
+                    <span>${money(o.fee)}</span>
+                </div>`).join('');
+        }
+
+        const cartHasNoCod = () => cart.some(i => NO_COD_CATEGORIES.includes(i.category));
+
+        // builds the payment choices again every time checkout opens (depends on what is in the cart)
+        function renderPaymentOptions() {
+            const noCod = cartHasNoCod();
+            const opts = [];
+            if (COD_ENABLED && !noCod) opts.push({
+                key: 'cod',
+                title: 'Cash on Delivery (ক্যাশ অন ডেলিভারি)',
+                sub: 'Send the delivery charge first by bKash, pay the rest on delivery / আগে ডেলিভারি চার্জ bKash-এ পাঠান, বাকি টাকা ডেলিভারির সময় দিন'
+            });
+            const free = isFreeDelivery();
+            opts.push({
+                key: 'bkash',
+                title: free ? 'Product price by bKash (পণ্যের মূল্য bKash-এ)' : 'Full payment by bKash (সম্পূর্ণ টাকা bKash-এ)',
+                sub: free ? 'No delivery charge. Pay only the product price now / ডেলিভারি চার্জ নেই, শুধু পণ্যের মূল্য এখনই পরিশোধ করুন'
+                          : 'Pay products + delivery charge now / পণ্যের দাম ও ডেলিভারি চার্জ এখনই পরিশোধ করুন'
+            });
+            document.getElementById('co-pay-options').innerHTML = opts.map((o, i) => `
+                <div class="mb-2"><label class="mb-0" style="cursor:pointer"><input type="radio" name="pay" value="${o.key}" ${i === 0 ? 'checked' : ''} onchange="renderCheckoutSummary()"> <b>${o.title}</b><br><small class="text-muted" style="margin-left:19px;display:inline-block">${o.sub}</small></label></div>`).join('');
+            document.getElementById('co-pay-note').innerHTML =
+                (noCod ? '<div class="policy-note mb-2" style="background:#fdecea;border-color:#f5b5ae;color:#7a1f16">IT পণ্য থাকায় Cash on Delivery পাওয়া যাবে না। / Cash on Delivery is not available because your order has IT product(s).</div>' : '') +
+                (free ? '<div class="policy-note mb-2" style="background:#e9f9ef;border-color:#b7e4c7;color:#1b6b3a">IT পণ্যের জন্য ডেলিভারি চার্জ লাগবে না। / No delivery charge for IT products.</div>' : '');
+        }
+
+        function selectedShipping() {
+            if (isFreeDelivery()) return { label: 'Free delivery', fee: 0 };
+            const r = document.querySelector('input[name="ship"]:checked');
+            return SHIPPING_OPTIONS[r ? +r.value : 0];
+        }
+        function selectedPayment() {
+            const r = document.querySelector('input[name="pay"]:checked');
+            return r ? r.value : '';
+        }
+
+        function renderCheckoutSummary() {
+            const ship = selectedShipping();
+            const sub = cartTotal();
+            const total = sub + ship.fee;
+            const pay = selectedPayment();
+            const payNow = pay === 'cod' ? ship.fee : total;
+            const due = total - payNow;
+            document.getElementById('co-items').innerHTML = cart.map(i => `
+                <div class="co-row"><span>${i.name} x ${i.quantity}</span><span>${money(i.price * i.quantity)}</span></div>`).join('');
+            document.getElementById('co-subtotal').textContent = money(sub);
+            document.getElementById('co-total').textContent = money(total);
+            document.getElementById('co-paynow-foot').textContent = money(payNow);
+            document.getElementById('co-split').innerHTML =
+                `<div class="co-row"><b>Pay now by bKash / এখন bKash-এ দিন</b><b style="color:#e2136e">${money(payNow)}</b></div>` +
+                (due > 0 ? `<div class="co-row"><span>Pay on delivery / ডেলিভারির সময় দিন</span><span>${money(due)}</span></div>` : '');
+            document.getElementById('bkash-num-text').textContent = BKASH_NUMBER;
+            document.getElementById('bkash-text').innerHTML =
+                `Please <b>${BKASH_TYPE}</b> <b>${money(payNow)}</b> (${pay === 'cod' ? 'delivery charge' : (ship.fee ? 'full amount' : 'product price')}) to bKash number <b>${BKASH_NUMBER}</b>, then enter your bKash number and Transaction ID below.<br>` +
+                `অনুগ্রহ করে bKash নম্বর <b>${BKASH_NUMBER}</b>-এ <b>${money(payNow)}</b> (${pay === 'cod' ? 'ডেলিভারি চার্জ' : (ship.fee ? 'সম্পূর্ণ টাকা' : 'পণ্যের মূল্য')}) <b>${BKASH_TYPE}</b> করুন, তারপর নিচে আপনার bKash নম্বর ও Transaction ID লিখুন।`;
+        }
+
+        function copyBkash() {
+            if (navigator.clipboard) navigator.clipboard.writeText(BKASH_NUMBER).catch(() => {});
+            showToast('bKash number copied / নম্বর কপি হয়েছে');
+        }
+
+        // Step 1: customer clicks "Order Now" -> show the Bangla + English notice popup
+        function openCheckout() {
+            if (cart.length === 0) { showToast("Your cart is empty!"); return; }
+            toggleCart();
+            const bn = document.getElementById('notice-bn'), en = document.getElementById('notice-en');
+            if (isFreeDelivery() && cartHasNoCod()) {
+                bn.innerHTML = 'আপনার অর্ডারে শুধু <b>IT পণ্য</b> আছে। IT পণ্যের ক্ষেত্রে <b>Cash on Delivery পাওয়া যাবে না</b>, তবে <b>ডেলিভারি চার্জ লাগবে না</b>। অর্ডার নিশ্চিত করতে <b>শুধু পণ্যের মূল্য আগে bKash-এ Send Money</b> করতে হবে।';
+                en.innerHTML = 'Your order contains only <b>IT product(s)</b>. <b>Cash on Delivery is not available</b> for IT products, but <b>there is no delivery charge</b>. To confirm your order, send <b>only the product price in advance by bKash Send Money</b>.';
+            } else if (cartHasNoCod()) {
+                bn.innerHTML = 'আপনার অর্ডারে <b>IT পণ্যের সাথে অন্য পণ্যও</b> আছে। IT পণ্য থাকায় <b>Cash on Delivery পাওয়া যাবে না</b>। অর্ডার নিশ্চিত করতে পণ্যের মূল্য ও ডেলিভারি চার্জসহ <b>সম্পূর্ণ টাকা আগে bKash-এ Send Money</b> করতে হবে।';
+                en.innerHTML = 'Your order has <b>IT product(s) together with other products</b>. <b>Cash on Delivery is not available</b>. To confirm your order, the <b>full amount (product price + delivery charge) must be sent in advance by bKash Send Money</b>.';
+            } else {
+                bn.innerHTML = 'Cash on Delivery-তে অর্ডার করতে হলে <b>আগে ডেলিভারি চার্জ bKash-এ Send Money</b> করতে হবে। বাকি টাকা পণ্য হাতে পেয়ে পরিশোধ করবেন।';
+                en.innerHTML = 'To order with Cash on Delivery, you must <b>first send the delivery charge by bKash Send Money</b>. You can pay the remaining amount when you receive the product.';
+            }
+            $('#noticeModal').modal('show');
+        }
+
+        // Step 2: customer accepts the notice -> open the checkout form
+        function confirmNotice() {
+            document.getElementById('co-error').textContent = '';
+            renderShippingOptions();
+            renderPaymentOptions();
+            renderCheckoutSummary();
+            document.querySelector('#checkoutModal .co-form .modal-body').scrollTop = 0;
+            $('#noticeModal').one('hidden.bs.modal', () => $('#checkoutModal').modal('show')).modal('hide');
+        }
+
+        const validPhone = v => /^(\+?88)?01\d{9}$/.test(v.replace(/[\s-]/g, ''));
+
+        async function submitOrder(e) {
+            e.preventDefault();
+            const f = e.target;
+            const err = document.getElementById('co-error');
+            const v = n => f.elements[n].value.trim();
+            err.textContent = '';
+
+            if (!v('cname') || !v('cdistrict') || !v('carea') || !v('caddress')) { err.textContent = 'Please fill in all required fields (*).'; return; }
+            if (!validPhone(v('cphone'))) { err.textContent = 'Please enter a valid phone number (01XXXXXXXXX).'; return; }
+            const pay = selectedPayment();
+            if (!pay) { err.textContent = 'No payment method is enabled.'; return; }
+            // every order needs a bKash payment first (full amount, or delivery charge for Cash on Delivery)
+            if (!validPhone(v('bkashnum'))) { err.textContent = 'Please enter the bKash number you paid from. / যে bKash নম্বর থেকে টাকা পাঠিয়েছেন সেটি লিখুন।'; return; }
+            if (v('trxid').length < 6)      { err.textContent = 'Please enter your bKash Transaction ID. / bKash Transaction ID লিখুন।'; return; }
+
+            const ship = selectedShipping();
+            const sub = cartTotal();
+            const total = sub + ship.fee;
+            const orderId = 'PM-' + Date.now().toString(36).toUpperCase();
+            const lines = cart.map(i => `- ${i.name} x ${i.quantity} = ${money(i.price * i.quantity)}`);
+            const payNow = pay === 'cod' ? ship.fee : total;
+            const payText = (pay === 'cod'
+                    ? `Cash on Delivery - delivery charge ${money(ship.fee)} paid in advance by bKash`
+                    : `Full payment ${money(total)} by bKash`)
+                + ` (from ${v('bkashnum')}, TrxID: ${v('trxid')})`
+                + `\nDue on delivery: ${money(total - payNow)}`;
+            const message =
+`New order ${orderId}
+
+Name: ${v('cname')}
+Phone: ${v('cphone')}
+Email: ${v('cemail') || '-'}
+District: ${v('cdistrict')}
+Thana / Area: ${v('carea')}
+Address: ${v('caddress')}
+Note: ${v('cnote') || '-'}
+
+Items:
+${lines.join('\n')}
+
+Subtotal: ${money(sub)}
+Delivery (${ship.label}): ${money(ship.fee)}
+TOTAL: ${money(total)}
+Payment: ${payText}`;
+
+            const btn = document.getElementById('co-submit');
+            btn.disabled = true; btn.textContent = 'Sending...';
+            let delivered = false;
+
+            // WhatsApp first (must open straight after the click so the browser allows it)
+            if (SEND_TO_WHATSAPP) {
+                if (isShortWaLink && navigator.clipboard) {
+                    // short link cannot hold text, so copy the order details for the customer to paste in the chat
+                    navigator.clipboard.writeText(message).catch(() => {});
+                }
+                window.open(waUrl(message), '_blank');
+                delivered = true;
+            }
+
+            if (SEND_TO_EMAIL) {
+                try {
+                    if (WEB3FORMS_KEY.startsWith('YOUR_')) throw new Error('Web3Forms key is not set');
+                    const payload = {
+                        access_key: WEB3FORMS_KEY,
+                        subject: `New order ${orderId} - Phoring Mart`,
+                        from_name: 'Phoring Mart Website',
+                        name: v('cname'),
+                        phone: v('cphone'),
+                        message: message
+                    };
+                    if (v('cemail')) payload.email = v('cemail');
+                    const res = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+                    if (data.success) delivered = true; else throw new Error(data.message || 'Send failed');
+                } catch (ex) {
+                    console.error(ex);
+                }
+            }
+
+            btn.disabled = false; btn.textContent = 'Place Order';
+            if (!delivered) {
+                err.textContent = 'Sorry, the order could not be sent. Please check your internet and try again, or contact us by phone.';
+                return;
+            }
+
+            cart = [];
+            updateCartUI();
+            f.reset();
+            $('#checkoutModal').modal('hide');
+            document.getElementById('ok-id').textContent = orderId;
+            document.getElementById('ok-wa-note').style.display = (SEND_TO_WHATSAPP && isShortWaLink) ? 'block' : 'none';
+            $('#successModal').modal('show');
+        }
+
+        function showToast(message) {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = 'custom-toast';
+            t.textContent = message;
+            c.appendChild(t);
+            setTimeout(() => {
+                t.style.animation = 'toastOut .25s ease forwards';
+                setTimeout(() => t.remove(), 250);
+            }, 2500);
+        }
+
+        // ---------- Init ----------
+        // ---------- Animated sale banners on the homepage ----------
+        function burstPoints(n) {
+            let pts = [];
+            for (let i = 0; i < n * 2; i++) {
+                const r = i % 2 ? 82 : 100, a = i * Math.PI / n;
+                pts.push((100 + r * Math.cos(a)).toFixed(1) + ',' + (100 + r * Math.sin(a)).toFixed(1));
+            }
+            return pts.join(' ');
+        }
+        const BURST_SVG = `<svg viewBox="0 0 200 200" aria-hidden="true"><defs><linearGradient id="burstGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff176"/><stop offset="1" stop-color="#ffb300"/></linearGradient></defs><polygon points="${burstPoints(14)}" fill="url(#burstGrad)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></svg>`;
+
+        function confettiHTML() {
+            const colors = ['#fff176', '#ffffff', '#69f0ae', '#40c4ff', '#ff80ab', '#ffd180'];
+            let out = '';
+            for (let i = 0; i < 20; i++) {
+                const size = 6 + (i % 4) * 3, dur = 3.6 + (i % 5) * 0.8;
+                out += `<i style="--x:${(i * 53) % 97 + 1}%;--s:${size}px;--c:${colors[i % colors.length]};--r:${i % 3 ? '2px' : '50%'};--d:${dur}s;--dl:-${((i * 0.77) % dur).toFixed(2)}s"></i>`;
+            }
+            return out;
+        }
+
+        function pad2(n) { return String(n).padStart(2, '0'); }
+
+        function renderSaleBanners() {
+            const box = document.getElementById('sale-banners');
+            if (!box || activeSales.length === 0) { if (box) box.style.display = 'none'; return; }
+            box.innerHTML = activeSales.map((x, i) => {
+                const label = catLabel(x.category);
+                return `
+                <div class="sale-banner" onclick="goCategory('${x.category}')" data-sale="${i}">
+                    <div class="sale-confetti">${confettiHTML()}</div>
+                    <i class="fas fa-gift sale-gift"></i>
+                    <div class="sale-burst-wrap" id="sale-burst-${i}">
+                        ${BURST_SVG}
+                        <div class="sale-burst-text"><b>${x.percent}%</b><span>OFF</span></div>
+                    </div>
+                    <div class="sale-text">
+                        <div class="sale-kicker"><i class="fas fa-bolt"></i> ${x.endsOn ? 'Limited time offer' : 'Special offer'}</div><br>
+                        <h3 class="sale-title">FLAT ${x.percent}% OFF</h3>
+                        <div class="sale-sub">on all ${label}<small>${label}-এর সব পণ্যে ফ্ল্যাট ${x.percent}% ছাড়</small></div>
+                        ${x.endsOn ? `<div class="sale-count" id="sale-count-${i}"></div>` : ''}
+                    </div>
+                    <button class="sale-btn" onclick="event.stopPropagation(); goCategory('${x.category}')">Shop Now <i class="fas fa-arrow-right ml-1"></i></button>
+                </div>`;
+            }).join('');
+
+            // countdown for sales that have an end date
+            const timed = activeSales.map((x, i) => ({ i, end: parseEnd(x.endsOn) })).filter(t => t.end);
+            if (timed.length) {
+                const tick = () => {
+                    timed.forEach(t => {
+                        const left = t.end - new Date();
+                        if (left <= 0) { location.reload(); return; }   // sale finished: reload so prices go back to normal
+                        const d = Math.floor(left / 864e5), h = Math.floor(left % 864e5 / 36e5), m = Math.floor(left % 36e5 / 6e4), sec = Math.floor(left % 6e4 / 1e3);
+                        const el = document.getElementById('sale-count-' + t.i);
+                        if (el) el.innerHTML = [[d, 'Days'], [h, 'Hrs'], [m, 'Min'], [sec, 'Sec']].map(a => `<div><b>${pad2(a[0])}</b><small>${a[1]}</small></div>`).join('');
+                    });
+                };
+                tick(); setInterval(tick, 1000);
+            }
+
+            // optional Lottie animation (only when a link is given); if it cannot load, the built-in animation stays
+            activeSales.forEach((x, i) => {
+                if (!x.lottie) return;
+                const wrap = document.getElementById('sale-burst-' + i);
+                const play = () => {
+                    const keep = wrap.innerHTML;
+                    wrap.innerHTML = '<div class="lottie-box"></div>';
+                    const anim = window.lottie.loadAnimation({ container: wrap.firstChild, renderer: 'svg', loop: true, autoplay: true, path: x.lottie });
+                    anim.addEventListener('data_failed', () => { wrap.innerHTML = keep; });
+                };
+                if (window.lottie) { play(); return; }
+                const sc = document.createElement('script');
+                sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js';
+                sc.onload = play;
+                document.head.appendChild(sc);
+            });
+        }
+
+        renderSaleBanners();
+        renderProducts(products);
+        updateCartUI();
+        $('#heroCarousel').carousel({ interval: 3500, ride: 'carousel', pause: false });
+    </script>
+</body>
+</html>

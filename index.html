@@ -965,26 +965,26 @@
 
         // 7) CATEGORIES (key must match "category" in products below)
         const CATEGORIES = [
-            { key: "Digital",     label: "Digital Products",        icon: "fa-laptop" },
-            { key: "Electronics",   label: "Home Appliance",     icon: "fa-blender" },
-            { key: "Beauty", label: "Beauty & Cosmetics", icon: "fa-spa" },
-            { key: "Women",  label: "Clothes - Women",    icon: "fa-female" },
-            { key: "Men",    label: "Clothes - Men",      icon: "fa-male" },
-            { key: "Candle",    label: "Home Decoration Candle",      icon: "fa-candlestick" },
-            { key: "Others", label: "Others",             icon: "fa-box-open" }
+            { key: "IT",          label: "IT Products",      icon: "fa-mobile-alt",         sub: "Android Mobile Application & Games" },
+            { key: "Digital",     label: "Digital Products", icon: "fa-cloud-download-alt" },
+            { key: "Candles",     label: "Candle Products",  icon: "fa-fire" },
+            { key: "Electronics", label: "Electronics",      icon: "fa-plug" },
+            { key: "Men",         label: "Men Clothes",      icon: "fa-male" },
+            { key: "Women",       label: "Women Clothes",    icon: "fa-female" },
+            { key: "Others",      label: "Others",           icon: "fa-box-open" }
         ];
 
         // 7b) CATEGORY SALES  (flat % discount on a whole category + animated banner on the homepage)
         //     - Copy one line to start a sale on another category. To stop a sale set active: false (or delete the line).
-        //     - category : a key from CATEGORIES above (IT, Home, Beauty, Women, Men, Others)
+        //     - category : a key from CATEGORIES above (IT, Digital, Candles, Electronics, Men, Women, Others)
         //     - percent  : discount percentage. The price written in the products list becomes the "old price"
         //                  and the customer sees the reduced price (a product's own oldPrice is ignored while its category is on sale).
         //     - endsOn   : last moment of the sale, like "2026-10-31 23:59" (shows a countdown and stops by itself),
         //                  or null = no end date.
         //     - lottie   : OPTIONAL link to a Lottie animation .json (from lottiefiles.com). Leave "" to use the built-in jumping animation.
         const CATEGORY_SALES = [
-            { category: "Men", percent: 10, active: true, endsOn: null, lottie: "" }
-            // { category: "Beauty", percent: 15, active: true, endsOn: "2026-11-15 23:59", lottie: "" },
+            { category: "Men",    percent: 80, active: true, endsOn: null, lottie: "" },
+            { category: "Women",  percent: 25, active: true, endsOn: null, lottie: "" }
         ];
 
         // 8) PRODUCTS
@@ -1000,7 +1000,7 @@
         //  { id: 14,                                  // must be a UNIQUE number, never repeat
         //    name: "Product Name",                    // product title shown on the website
         //    category: "IT",                          // must be one of the keys in CATEGORIES above:
-        //                                             //   IT / Home / Beauty / Women / Men / Others
+        //                                             //   IT / Digital / Candles / Electronics / Men / Women / Others
         //    price: 500,                              // selling price (the OFFER price if there is a discount)
         //    oldPrice: 700,                           // OPTIONAL: old price (crossed out). Delete this
         //                                             //   whole line if there is NO offer/discount.
@@ -1037,13 +1037,13 @@
             { id: 5,  name: "Electric Kettle 1.8L",           category: "Electronics",   price: 890,  moq: 6,  image: "Image9.jpg",
               description: "Fast-boiling electric kettle with auto switch-off.",
               details: ["1.8 litre capacity", "Stainless steel body", "Auto power-off", "Cordless base"]  },
-            { id: 6,  name: "Blender 2 in 1",                 category: "Home",   price: 1850, moq: 4,  image: "Image10.jpg",
+            { id: 6,  name: "Blender 2 in 1",                 category: "Electronics",   price: 1850, moq: 4,  image: "Image10.jpg",
               description: "2 in 1 blender for juice, smoothie and grinding.",
               details: ["2 jars included", "Strong copper motor", "Stainless steel blades", "Anti-slip base"] },
-            { id: 7,  name: "Matte Lipstick Set",             category: "Beauty", price: 180,  moq: 24, image: "Image11.jpg",
+            { id: 7,  name: "Matte Lipstick Set",             category: "Others", price: 180,  moq: 24, image: "Image11.jpg",
               description: "Matte lipstick set in popular shades.",
               details: ["Long-lasting color", "Smooth matte finish", "Set of multiple shades", "Sold per set"] },
-            { id: 8,  name: "Face Wash 100ml",                category: "Beauty", price: 140,  moq: 24, image: "Image12.jpg",
+            { id: 8,  name: "Face Wash 100ml",                category: "Others", price: 140,  moq: 24, image: "Image12.jpg",
               description: "Daily face wash for fresh and clean skin.",
               details: ["100ml bottle", "Suitable for daily use", "Gentle formula", "Pump bottle"] },
             { id: 9,  name: "Women's Three Piece Set",        category: "Women",  price: 1250, oldPrice: 1500, moq: 6,  image: "Image13.jpg",
@@ -1061,10 +1061,42 @@
             { id: 13, name: "Travel Backpack",                category: "Others", price: 520,  moq: 10, image: "Image17.jpg",
               description: "Spacious backpack for travel, college and office.",
               details: ["Water-resistant fabric", "Padded shoulder straps", "Laptop compartment", "Multiple pockets"] },
-            
-            { id: 14, name: "Smart Watch Series 7", category: "Electronics", price: 1650, oldPrice: 2200, moq: 5,
+
+            // ================= DEMO PRODUCTS WITH IMAGE LINKS (multi-photo) =================
+            // These 3 use online image links so you can see the gallery working right away.
+            // For YOUR pictures, replace each link with a Google Drive link, like:
+            //   "https://drive.google.com/file/d/YOUR_FILE_ID/view?usp=sharing"
+            // (Drive file must be shared as "Anyone with the link"). You can mix file names and links.
+            // To remove the demos, delete everything from here down to the "];" line
+            // (and remove the comma after product 13's closing brace).
+
+            { id: 14, name: "Smart Watch Series 7 (4 photos demo)", category: "Electronics", price: 1650, oldPrice: 2200, moq: 5,
               image: "https://picsum.photos/seed/watch-front/700/700",
-              images: ["https://picsum.photos/seed/watch-side/700/700","https://picsum.photos/seed/watch-strap/700/700"], description: "...", details: [...] }
+              images: [
+                  "https://picsum.photos/seed/watch-side/700/700",
+                  "https://picsum.photos/seed/watch-strap/700/700",
+                  "https://picsum.photos/seed/watch-box/700/700"
+              ],
+              description: "Stylish smart watch with fitness tracking, call alerts and a bright display.",
+              details: ["1.69 inch HD display", "Heart rate and sleep tracking", "Up to 7 days battery", "Colors: Black / Silver / Blue"] },
+
+            { id: 15, name: "Women's Fashion Handbag (3 photos demo)", category: "Women", price: 980, oldPrice: 1300, moq: 6,
+              image: "https://picsum.photos/seed/bag-main/700/700",
+              images: [
+                  "https://picsum.photos/seed/bag-inside/700/700",
+                  "https://picsum.photos/seed/bag-color/700/700"
+              ],
+              description: "Trendy handbag with spacious compartments, perfect for office, shopping and parties.",
+              details: ["Premium PU leather", "Zip closure with inner pocket", "Adjustable shoulder strap", "Multiple colors available"] },
+
+            { id: 16, name: "Men's Casual Sneakers (3 photos demo)", category: "Men", price: 1200, moq: 6,
+              image: "https://picsum.photos/seed/shoe-main/700/700",
+              images: [
+                  "https://picsum.photos/seed/shoe-side/700/700",
+                  "https://picsum.photos/seed/shoe-sole/700/700"
+              ],
+              description: "Lightweight and comfortable sneakers for daily wear.",
+              details: ["Breathable fabric upper", "Anti-slip rubber sole", "Sizes: 40, 41, 42, 43, 44", "Colors: White / Black"] }
         ];
 
         /* =================================================================================================================================================
@@ -1154,11 +1186,11 @@
 
         // Category sidebar + filter chips
         document.getElementById('cat-sidebar').innerHTML = CATEGORIES.map(c =>
-            `<a onclick="goCategory('${c.key}')"><i class="fas ${c.icon}"></i>${c.label}${salePill(c.key)}</a>`).join('');
+            `<a onclick="goCategory('${c.key}')"><i class="fas ${c.icon}"></i><span>${c.label}${c.sub ? `<small style="display:block;font-size:11px;color:var(--text-muted);line-height:1.3">${c.sub}</small>` : ''}</span>${salePill(c.key)}</a>`).join('');
 
         document.getElementById('category-filters').innerHTML =
             `<button class="filter-btn active" data-cat="all" onclick="setCategory('all')">All</button>` +
-            CATEGORIES.map(c => `<button class="filter-btn" data-cat="${c.key}" onclick="setCategory('${c.key}')">${c.label}${salePill(c.key)}</button>`).join('');
+            CATEGORIES.map(c => `<button class="filter-btn" data-cat="${c.key}" title="${c.sub || c.label}" onclick="setCategory('${c.key}')">${c.label}${salePill(c.key)}</button>`).join('');
 
         function goCategory(key) {
             setCategory(key);

@@ -386,6 +386,47 @@
         .d-qty button { border: 0; background: #fafafa; width: 36px; height: 36px; cursor: pointer; font-size: 18px; }
         .d-qty span { min-width: 44px; text-align: center; font-weight: 600; }
 
+        /* ---------- PRODUCT PHOTO GALLERY ---------- */
+        .product-img { overflow: hidden; }
+        .product-img img { transition: transform .5s ease, opacity .4s ease; }
+        .product-card:hover .product-img img.pi-main { transform: scale(1.05); }
+        .product-img img.pi-alt { position: absolute; inset: 0; opacity: 0; }
+        .photo-count {
+            position: absolute; left: 8px; top: 8px; z-index: 2;
+            background: rgba(0,0,0,.6); color: #fff; font-size: 11px; font-weight: 600;
+            padding: 3px 9px; border-radius: 12px; backdrop-filter: blur(2px);
+        }
+        .photo-count i { margin-right: 4px; }
+        @media (hover: hover) {
+            .product-card:hover .pi-alt { opacity: 1; }
+            .product-card:hover .product-img.has-multi img.pi-main { transform: none; }
+        }
+        .gal-main { position: relative; border-radius: 8px; overflow: hidden; background: #eee; touch-action: pan-y; }
+        #detailsModal .modal-img { display: block; transition: opacity .25s ease; }
+        .gal-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+            width: 36px; height: 36px; border-radius: 50%; border: 0; cursor: pointer;
+            background: rgba(255,255,255,.9); color: var(--text-dark); box-shadow: 0 2px 8px rgba(0,0,0,.25);
+            opacity: 0; transition: opacity .2s ease, background .2s ease;
+        }
+        .gal-arrow:hover { background: var(--brand); color: #fff; }
+        .gal-arrow.prev { left: 8px; } .gal-arrow.next { right: 8px; }
+        .gal-main:hover .gal-arrow { opacity: 1; }
+        @media (hover: none) { .gal-arrow { opacity: 1; } }
+        .gal-counter {
+            position: absolute; right: 8px; bottom: 8px; z-index: 3;
+            background: rgba(0,0,0,.6); color: #fff; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 12px;
+        }
+        .gal-thumbs { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; }
+        .gal-thumb {
+            flex: 0 0 auto; width: 58px; height: 58px; border-radius: 6px; overflow: hidden; cursor: pointer;
+            border: 2px solid transparent; opacity: .65; padding: 0; background: #eee; transition: all .2s ease;
+        }
+        .gal-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .gal-thumb:hover { opacity: 1; }
+        .gal-thumb.active { border-color: var(--brand); opacity: 1; box-shadow: 0 2px 8px rgba(248,86,6,.35); }
+        .gal.single .gal-arrow, .gal.single .gal-counter, .gal.single .gal-thumbs { display: none; }
+
         /* ---------- ABOUT ---------- */
         .about-box { background: #fff; border-radius: 6px; padding: 30px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
         .about-box img { width: 100%; border-radius: 6px; object-fit: cover; max-height: 340px; }
@@ -618,7 +659,17 @@
                 <button type="button" class="close position-absolute" style="right:14px;top:8px;z-index:5;font-size:28px" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <div class="modal-body p-4">
                     <div class="row">
-                        <div class="col-md-5 mb-3 mb-md-0"><img id="d-img" class="modal-img" alt="Product"></div>
+                        <div class="col-md-5 mb-3 mb-md-0">
+                            <div class="gal" id="d-gal">
+                                <div class="gal-main" id="d-main">
+                                    <img id="d-img" class="modal-img" alt="Product">
+                                    <button type="button" class="gal-arrow prev" onclick="stepDetailImg(-1)" aria-label="Previous photo"><i class="fas fa-chevron-left"></i></button>
+                                    <button type="button" class="gal-arrow next" onclick="stepDetailImg(1)" aria-label="Next photo"><i class="fas fa-chevron-right"></i></button>
+                                    <span class="gal-counter" id="d-counter"></span>
+                                </div>
+                                <div class="gal-thumbs" id="d-thumbs"></div>
+                            </div>
+                        </div>
                         <div class="col-md-7">
                             <small class="text-muted" id="d-cat"></small>
                             <h4 class="font-weight-bold mb-2" id="d-name"></h4>
@@ -833,6 +884,20 @@
         //   - Avoid spaces in file names. Use "red-shirt.jpg" instead of "red shirt.jpg".
         const IMAGE_FOLDER = "images";   // folder name. Change only if you rename the folder.
 
+        // GOOGLE DRIVE IMAGES (NEW):  anywhere an image is needed (logo, slides, products, about picture)
+        // you can ALSO paste a Google Drive link instead of a file name. Example:
+        //     "https://drive.google.com/file/d/1AbCdEfGhIjKlMnOpQrStUvWxYz/view?usp=sharing"
+        // Rules:  1) In Google Drive: right click the picture > Share > General access > "Anyone with the link" (Viewer).
+        //         2) Use the link of the PICTURE FILE (not a folder link).
+        //         3) Any other full web link (https://...) also works, and so do local file names from the images folder.
+        //
+        // MANY PICTURES FOR ONE PRODUCT (NEW):  keep  image: "main-picture"  and add  images: [ "2nd", "3rd", ... ]
+        // Each item can be a file name OR a Drive link. Example:
+        //     image: "Image5.jpg",
+        //     images: ["https://drive.google.com/file/d/AAAA/view", "Image6.jpg", "https://drive.google.com/file/d/BBBB/view"],
+        // The product card shows a photo-count badge and swaps to the 2nd photo on hover;
+        // the Details popup shows a slider with arrows, swipe and thumbnails.
+
 
 
         //===============================Company_Image==========================================
@@ -917,10 +982,9 @@
         //                  or null = no end date.
         //     - lottie   : OPTIONAL link to a Lottie animation .json (from lottiefiles.com). Leave "" to use the built-in jumping animation.
         const CATEGORY_SALES = [
-    { category: "Men",    percent: 80, active: true, endsOn: null, lottie: "" },
-    { category: "Women",  percent: 25, active: true, endsOn: null, lottie: "" },
-    { category: "Beauty", percent: 15, active: true, endsOn: "2026-10-31 23:59", lottie: "" }
-];
+            { category: "Men", percent: 10, active: true, endsOn: null, lottie: "" }
+            // { category: "Beauty", percent: 15, active: true, endsOn: "2026-11-15 23:59", lottie: "" },
+        ];
 
         // 8) PRODUCTS
         // =====================================================================
@@ -940,7 +1004,8 @@
         //    oldPrice: 700,                           // OPTIONAL: old price (crossed out). Delete this
         //                                             //   whole line if there is NO offer/discount.
         //    moq: 10,                                 // minimum order quantity (only used if MIN_QTY_FOR_ALL = null)
-        //    image: "new-shoe.jpg",                   // picture file name from the images folder
+        //    image: "new-shoe.jpg",                   // main picture: file name OR Google Drive link
+        //    images: ["side.jpg", "https://drive.google.com/file/d/XXXX/view"],   // OPTIONAL: more pictures (delete this line if only one)
         //    description: "Short text shown in the Details popup.",
         //    details: ["Point 1", "Point 2", "Point 3"]   // bullet points: size, color, material...
         //  }
@@ -1011,8 +1076,20 @@
         const priceHTML = p => discountPct(p)
             ? `${money(p.price)} <span class="old-price">${money(p.oldPrice)}</span>`
             : `${money(p.price)}`;
-        const imgPath = fileName => `${IMAGE_FOLDER}/${fileName}`;
-        const imgFallback = n => `https://placehold.co/600x400/fff1ea/f85606?text=${encodeURIComponent(String(n).replace(/\.[^.]+$/, ''))}`;
+        // ---- image helpers: local file name, Google Drive link or any web link ----
+        const driveId = u => { const m = String(u).match(/(?:\/d\/|[?&]id=)([A-Za-z0-9_-]{15,})/); return m ? m[1] : null; };
+        const imgPath = f => {
+            f = String(f || '').trim();
+            if (/^data:/i.test(f)) return f;
+            if (/^https?:\/\//i.test(f)) {
+                if (/(drive|docs)\.google\.com/i.test(f)) { const id = driveId(f); if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w1200`; }
+                return f;                                             // any other full web link
+            }
+            if (/^[A-Za-z0-9_-]{25,}$/.test(f)) return `https://drive.google.com/thumbnail?id=${f}&sz=w1200`;   // bare Drive file ID
+            return `${IMAGE_FOLDER}/${f}`;
+        };
+        const imgFallback = n => `https://placehold.co/600x400/fff1ea/f85606?text=${encodeURIComponent(/^(https?:|data:)/i.test(String(n)) ? 'Image' : String(n).replace(/\.[^.]+$/, ''))}`;
+        const galleryOf = p => [].concat(p.image, p.images || []).filter(Boolean);
         const money = v => `${CURRENCY}${v.toLocaleString('en-US')}`;
         const catLabel = key => (CATEGORIES.find(c => c.key === key) || {}).label || key;
 
@@ -1060,7 +1137,7 @@
         document.getElementById('hero-slides').innerHTML = HERO_SLIDES.map((s, i) => `
             <div class="carousel-item ${i === 0 ? 'active' : ''}">
                 <img src="${imgPath(s.image)}" alt="${s.title}"
-                     onerror="this.onerror=null;this.src='https://placehold.co/1200x380/f85606/ffffff?text=Image${s.image}'">
+                     onerror="this.onerror=null;this.src='https://placehold.co/1200x380/f85606/ffffff?text=Slide'">
                 <div class="carousel-caption">
                     <h3>${s.title}</h3>
                     <p>${s.text}</p>
@@ -1093,9 +1170,11 @@
             grid.innerHTML = list.map(p => `
                 <div class="col-6 col-md-4 col-lg-3 mb-3">
                     <div class="product-card">
-                        <div class="product-img">
-                            <img src="${imgPath(p.image)}" alt="${p.name}" onclick="openDetails(${p.id})"
+                        <div class="product-img${galleryOf(p).length > 1 ? ' has-multi' : ''}">
+                            <img class="pi-main" src="${imgPath(p.image)}" alt="${p.name}" onclick="openDetails(${p.id})"
                                  onerror="this.onerror=null;this.src='${imgFallback(p.image)}'">
+                            ${galleryOf(p).length > 1 ? `<img class="pi-alt" src="${imgPath(galleryOf(p)[1])}" alt="" loading="lazy" onclick="openDetails(${p.id})" onerror="this.remove()">
+                            <span class="photo-count"><i class="fas fa-images"></i>${galleryOf(p).length}</span>` : ''}
                             ${discountPct(p) ? `<span class="off-tag">-${discountPct(p)}%</span>` : ''}
                             <span class="moq-tag">${minQty(p) === 1 ? 'Order from 1 pc' : 'Min ' + minQty(p) + ' pcs'}</span>
                         </div>
@@ -1237,9 +1316,11 @@
             if (!p) return;
             detailId = id;
             detailQty = minQty(p);
-            const img = document.getElementById('d-img');
-            img.onerror = function () { this.onerror = null; this.src = imgFallback(p.image); };
-            img.src = imgPath(p.image);
+            detailImgs = galleryOf(p);
+            document.getElementById('d-gal').classList.toggle('single', detailImgs.length < 2);
+            document.getElementById('d-thumbs').innerHTML = detailImgs.map((f, k) =>
+                `<button type="button" class="gal-thumb" onclick="showDetailImg(${k})" aria-label="Photo ${k + 1}"><img src="${imgPath(f)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${imgFallback(f)}'"></button>`).join('');
+            showDetailImg(0);
             document.getElementById('d-cat').textContent = catLabel(p.category);
             document.getElementById('d-name').textContent = p.name;
             document.getElementById('d-price').innerHTML = `${priceHTML(p)} <small>/ piece</small>` +
@@ -1250,6 +1331,41 @@
             document.getElementById('d-qty').textContent = detailQty;
             $('#detailsModal').modal('show');
         }
+
+        // ---- details popup photo slider ----
+        let detailImgs = [], detailImgIdx = 0;
+        function showDetailImg(i) {
+            const n = detailImgs.length;
+            if (!n) return;
+            detailImgIdx = (i + n) % n;
+            const f = detailImgs[detailImgIdx];
+            const img = document.getElementById('d-img');
+            img.style.opacity = 0;
+            img.onload = () => { img.style.opacity = 1; };
+            img.onerror = function () { this.onerror = null; this.src = imgFallback(f); };
+            img.src = imgPath(f);
+            document.getElementById('d-counter').textContent = (detailImgIdx + 1) + ' / ' + n;
+            document.querySelectorAll('#d-thumbs .gal-thumb').forEach((t, k) => {
+                t.classList.toggle('active', k === detailImgIdx);
+                if (k === detailImgIdx && t.scrollIntoView) t.scrollIntoView({ block: 'nearest', inline: 'center' });
+            });
+        }
+        function stepDetailImg(d) { showDetailImg(detailImgIdx + d); }
+        (function () {
+            const box = document.getElementById('d-main');
+            let x0 = null;
+            box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+            box.addEventListener('touchend', e => {
+                if (x0 === null) return;
+                const dx = e.changedTouches[0].clientX - x0; x0 = null;
+                if (Math.abs(dx) > 40) stepDetailImg(dx < 0 ? 1 : -1);
+            });
+            document.addEventListener('keydown', e => {
+                if (!$('#detailsModal').hasClass('show')) return;
+                if (e.key === 'ArrowLeft') stepDetailImg(-1);
+                if (e.key === 'ArrowRight') stepDetailImg(1);
+            });
+        })();
 
         function changeDetailQty(delta) {
             const p = products.find(x => x.id === detailId);

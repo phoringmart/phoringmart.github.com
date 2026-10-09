@@ -965,11 +965,12 @@
 
         // 7) CATEGORIES (key must match "category" in products below)
         const CATEGORIES = [
-            { key: "IT",     label: "IT Products",        icon: "fa-laptop" },
-            { key: "Home",   label: "Home Appliance",     icon: "fa-blender" },
+            { key: "Digital",     label: "Digital Products",        icon: "fa-laptop" },
+            { key: "Electronics",   label: "Home Appliance",     icon: "fa-blender" },
             { key: "Beauty", label: "Beauty & Cosmetics", icon: "fa-spa" },
             { key: "Women",  label: "Clothes - Women",    icon: "fa-female" },
             { key: "Men",    label: "Clothes - Men",      icon: "fa-male" },
+            { key: "Candle",    label: "Home Decoration Candle",      icon: "fa-candlestick" },
             { key: "Others", label: "Others",             icon: "fa-box-open" }
         ];
 
@@ -1021,19 +1022,19 @@
 
         // ===============================ADD PRODUCT AREA=================================================================
         const products = [
-            { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "IT",     price: 450, oldPrice: 600,  moq: 10, image: "Image5.jpg",
+            { id: 1,  name: "Wireless Bluetooth Earbuds",     category: "Electronics",     price: 450, oldPrice: 600,  moq: 10, image: "Image5.jpg",
               description: "Compact wireless earbuds with a charging case, good for daily calls and music.",
               details: ["Bluetooth 5.0", "Charging case included", "Up to 20 hours with case", "Color: Black / White"]  },
-            { id: 2,  name: "Power Bank 10000mAh",            category: "IT",     price: 780,  moq: 10, image: "Image6.jpg",
+            { id: 2,  name: "Power Bank 10000mAh",            category: "Electronics",     price: 780,  moq: 10, image: "Image6.jpg",
               description: "Slim power bank for phones and small gadgets.",
               details: ["10000mAh capacity", "2 USB output ports", "LED battery indicator", "Color: Black"]  },
-            { id: 3,  name: "USB Flash Drive 32GB",           category: "IT",     price: 320,  moq: 20, image: "Image7.jpg",
+            { id: 3,  name: "USB Flash Drive 32GB",           category: "Electronics",     price: 320,  moq: 20, image: "Image7.jpg",
               description: "Portable USB flash drive for storing and sharing files.",
               details: ["32GB storage", "USB 2.0 / 3.0", "Metal body", "Plug and play"]  },
-            { id: 4,  name: "Electric Rice Cooker 1.8L",      category: "Home",   price: 1450, oldPrice: 1800, moq: 5,  image: "Image8.jpg",
+            { id: 4,  name: "Electric Rice Cooker 1.8L",      category: "Electronics",   price: 1450, oldPrice: 1800, moq: 5,  image: "Image8.jpg",
               description: "Easy-to-use electric rice cooker for home and small families.",
               details: ["1.8 litre capacity", "Non-stick inner pot", "Keep-warm function", "Steam tray included"]  },
-            { id: 5,  name: "Electric Kettle 1.8L",           category: "Home",   price: 890,  moq: 6,  image: "Image9.jpg",
+            { id: 5,  name: "Electric Kettle 1.8L",           category: "Electronics",   price: 890,  moq: 6,  image: "Image9.jpg",
               description: "Fast-boiling electric kettle with auto switch-off.",
               details: ["1.8 litre capacity", "Stainless steel body", "Auto power-off", "Cordless base"]  },
             { id: 6,  name: "Blender 2 in 1",                 category: "Home",   price: 1850, moq: 4,  image: "Image10.jpg",
@@ -1059,7 +1060,11 @@
               details: ["Soft cotton blend fabric", "Sizes: M, L, XL, XXL", "Embroidered collar", "Multiple colors available"] },
             { id: 13, name: "Travel Backpack",                category: "Others", price: 520,  moq: 10, image: "Image17.jpg",
               description: "Spacious backpack for travel, college and office.",
-              details: ["Water-resistant fabric", "Padded shoulder straps", "Laptop compartment", "Multiple pockets"] }
+              details: ["Water-resistant fabric", "Padded shoulder straps", "Laptop compartment", "Multiple pockets"] },
+            
+            { id: 14, name: "Smart Watch Series 7", category: "Electronics", price: 1650, oldPrice: 2200, moq: 5,
+              image: "https://picsum.photos/seed/watch-front/700/700",
+              images: ["https://picsum.photos/seed/watch-side/700/700","https://picsum.photos/seed/watch-strap/700/700"], description: "...", details: [...] }
         ];
 
         /* =================================================================================================================================================

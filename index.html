@@ -976,7 +976,7 @@
 
         // 7b) CATEGORY SALES  (flat % discount on a whole category + animated banner on the homepage)
         //     - Copy one line to start a sale on another category. To stop a sale set active: false (or delete the line).
-        //     - category : a key from CATEGORIES above (IT, Digital, Candles, Electronics, Men, Women, Others)
+        //     - category : a key from CATEGORIES above (IT, Digital, Candles, Electronics, Men, Women, Beauties)
         //     - percent  : discount percentage. The price written in the products list becomes the "old price"
         //                  and the customer sees the reduced price (a product's own oldPrice is ignored while its category is on sale).
         //     - endsOn   : last moment of the sale, like "2026-10-31 23:59" (shows a countdown and stops by itself),
@@ -1000,7 +1000,7 @@
         //  { id: 14,                                  // must be a UNIQUE number, never repeat
         //    name: "Product Name",                    // product title shown on the website
         //    category: "IT",                          // must be one of the keys in CATEGORIES above:
-        //                                             //   IT / Digital / Candles / Electronics / Men / Women / Others
+        //                                             //   IT / Digital / Candles / Electronics / Men / Women / Beauties
         //    price: 500,                              // selling price (the OFFER price if there is a discount)
         //    oldPrice: 700,                           // OPTIONAL: old price (crossed out). Delete this
         //                                             //   whole line if there is NO offer/discount.
@@ -1055,10 +1055,10 @@
             { id: 6,  name: "Blender 2 in 1",                 category: "Electronics",   price: 1850, moq: 4,  image: "Image10.jpg",
               description: "2 in 1 blender for juice, smoothie and grinding.",
               details: ["2 jars included", "Strong copper motor", "Stainless steel blades", "Anti-slip base"] },
-            { id: 7,  name: "Matte Lipstick Set",             category: "Others", price: 180,  moq: 24, image: "Image11.jpg",
+            { id: 7,  name: "Matte Lipstick Set",             category: "Beauties", price: 180,  moq: 24, image: "Image11.jpg",
               description: "Matte lipstick set in popular shades.",
               details: ["Long-lasting color", "Smooth matte finish", "Set of multiple shades", "Sold per set"] },
-            { id: 8,  name: "Face Wash 100ml",                category: "Others", price: 140,  moq: 24, image: "Image12.jpg",
+            { id: 8,  name: "Face Wash 100ml",                category: "Beauties", price: 140,  moq: 24, image: "Image12.jpg",
               description: "Daily face wash for fresh and clean skin.",
               details: ["100ml bottle", "Suitable for daily use", "Gentle formula", "Pump bottle"] },
             { id: 9,  name: "Women's Three Piece Set",        category: "Women",  price: 1250, oldPrice: 1500, moq: 6,  image: "Image13.jpg",
@@ -1073,7 +1073,7 @@
             { id: 12, name: "Men's Panjabi",                  category: "Men",    price: 850,  moq: 6,  image: "Image16.jpg",
               description: "Traditional panjabi for festivals and daily wear.",
               details: ["Soft cotton blend fabric", "Sizes: M, L, XL, XXL", "Embroidered collar", "Multiple colors available"] },
-            { id: 13, name: "Travel Backpack",                category: "Others", price: 520,  moq: 10, image: "Image17.jpg",
+            { id: 13, name: "Travel Backpack",                category: "Beauties", price: 520,  moq: 10, image: "Image17.jpg",
               description: "Spacious backpack for travel, college and office.",
               details: ["Water-resistant fabric", "Padded shoulder straps", "Laptop compartment", "Multiple pockets"] },
 
